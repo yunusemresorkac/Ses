@@ -1,0 +1,41 @@
+<androidx.cardview.widget.CardView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/_4sdp"
+    android:id="@+id/addNewVoice"
+    app:cardCornerRadius="@dimen/_4sdp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/itemOrange"
+        android:foreground="?selectableItemBackground"
+        android:padding="@dimen/_4sdp">
+
+
+        <ImageView
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:id="@+id/topicImage"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/add_circle_svgrepo_com"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Topic"
+            android:id="@+id/topicName"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/topicImage"
+            android:fontFamily="@font/montserrat"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

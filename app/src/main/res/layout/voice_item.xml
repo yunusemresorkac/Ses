@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?selectableItemBackground"
+    android:padding="@dimen/_4sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/username"
+        android:text=""
+        android:textColor="@color/colorPrimary"
+        android:fontFamily="@font/montserrat"
+        android:textSize="15sp"/>
+
+
+    <TextView
+        android:id="@+id/voiceTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_2sdp"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginEnd="@dimen/_2sdp"
+        android:layout_marginBottom="@dimen/_2sdp"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_below="@id/username"
+        android:fontFamily="@font/montserrat"
+        android:text=""
+        android:textColor="@color/black" />
+
+    <ImageView
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:src="@drawable/topic_svgrepo_com"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_below="@id/voiceTitle"
+        android:id="@+id/topicImage"/>
+
+
+    <TextView
+        android:id="@+id/voiceTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/likeVoiceBtn"
+        android:layout_alignParentEnd="true"
+
+        android:layout_marginStart="@dimen/_2sdp"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginEnd="@dimen/_2sdp"
+        android:fontFamily="@font/montserrat"
+        android:text="time"
+        android:textColor="@color/black" />
+
+    <ImageView
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:src="@drawable/time_svgrepo_com"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:layout_below="@id/topicImage"
+        android:id="@+id/timeImage"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/voiceSeconds"
+        android:fontFamily="@font/montserrat"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_2sdp"
+        android:layout_toEndOf="@id/timeImage"
+        android:text="12"
+        android:layout_below="@id/topicImage"
+        android:textColor="@color/black"/>
+
+
+    <ImageView
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:src="@drawable/ic_favorite_border"
+        android:layout_below="@id/timeImage"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:id="@+id/likeVoiceBtn"
+        app:tint="@color/bg_screen1" />
+
+    <TextView
+        android:id="@+id/countOfLikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/likeVoiceBtn"
+        android:layout_margin="@dimen/_2sdp"
+        android:layout_marginStart="@dimen/_2sdp"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginEnd="@dimen/_2sdp"
+        android:layout_marginBottom="@dimen/_2sdp"
+        android:text="12"
+        android:textColor="@color/bg_screen1" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tags"
+        android:text="tags"
+        android:layout_below="@id/countOfLikes"
+        android:textColor="@color/black"/>
+
+
+</RelativeLayout>
+
+
+

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1011120478513",
+    "firebase_url": "https://voiceapp-f1108-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "voiceapp-f1108",
+    "storage_bucket": "voiceapp-f1108.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011120478513:android:91e5584fced72c328ef810",
+        "android_client_info": {
+          "package_name": "com.yeslabapps.ses"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1011120478513-259ojoira1aa742fsumnoh9efm5nt83k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRW2sHGxgUPBf2JXvtNfaDJk5OnfHaTcQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1011120478513-259ojoira1aa742fsumnoh9efm5nt83k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/navHome"
+        android:icon="@drawable/ic_baseline_home_24"
+        android:title="Home"/>
+
+    <item android:id="@+id/navExplore"
+        android:icon="@drawable/topic_svgrepo_com"
+        android:title="Explore"/>
+
+    <item android:id="@+id/navAdd"
+        android:icon="@drawable/add_circle_svgrepo_com"
+        android:title=""/>
+
+    <item android:id="@+id/navProfile"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="Profile"/>
+</menu>
