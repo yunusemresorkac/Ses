@@ -47,7 +47,7 @@ class LoginActivityRepo {
                     if (task.result.isEmpty){
 
                         val user = User(username,
-                            userId, email, System.currentTimeMillis(), country,bio,firstName,lastName,"")
+                            userId, email, System.currentTimeMillis(), country,bio,firstName,lastName,"","",0)
 
                         FirebaseFirestore.getInstance().collection("Users").document(userId)
                             .set(user).addOnSuccessListener {

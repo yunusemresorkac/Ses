@@ -11,6 +11,10 @@ interface VoiceClick {
 
     fun clickUser(voice : Voice)
 
+    fun voiceActions(voice: Voice){
+
+    }
+
 
 
 }

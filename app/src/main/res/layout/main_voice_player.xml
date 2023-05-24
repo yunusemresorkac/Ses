@@ -12,18 +12,13 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/_4sdp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/mainVoiceTitle"
-            android:text=""
-            android:layout_alignParentEnd="true"
-            android:textColor="@color/black"/>
+
 
 
         <FrameLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:id="@+id/controlButtonsLay"
             >
 
@@ -33,7 +28,6 @@
                 android:layout_height="@dimen/_30sdp"
                 android:src="@drawable/pause_square_svgrepo_com"
                 android:background="?selectableItemBackgroundBorderless"
-
                 android:layout_margin="@dimen/_5sdp"
                 />
 
@@ -56,15 +50,29 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/controlButtonsLay"
-            android:layout_margin="@dimen/_10sdp"
+            android:id="@+id/seekbarLay"
+            android:layout_toStartOf="@id/controlButtonsLay"
+            android:layout_centerVertical="true"
             >
 
-
+            <TextView
+                android:id="@+id/mainVoiceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:fontFamily="@font/montserrat"
+                android:maxLines="2"
+                android:text="fasfas"
+                android:textColor="@color/black" />
 
             <SeekBar
                 android:id="@+id/seek_bar"
                 android:layout_width="match_parent"
+                android:layout_below="@id/mainVoiceTitle"
                 android:layout_height="wrap_content"
                 android:thumbTint="@color/black"
                 android:saveEnabled="false" />

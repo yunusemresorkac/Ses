@@ -42,10 +42,11 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_10sdp"
         android:background="@drawable/rect_border"
+        android:maxLines="1"
         android:padding="@dimen/_10sdp"
         android:hint="Tags"
         android:textColorHint="@color/black"
-        android:maxLength="40"
+        android:maxLength="15"
         android:textColor="@color/black"
         android:id="@+id/tagsEt"/>
 
@@ -59,6 +60,8 @@
         android:padding="@dimen/_5sdp"
         android:textColor="@android:color/black"
         />
+
+
 
 
 

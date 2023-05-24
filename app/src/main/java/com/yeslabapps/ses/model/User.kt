@@ -8,4 +8,6 @@ data class User(val username : String = "",
                 val bio : String = "",
                 val firstName : String = "",
                 val lastName : String = "",
-                val deviceId : String = "")
+                val deviceId : String = "",
+                val profileVoice : String = "",
+                var followers : Int = 0)

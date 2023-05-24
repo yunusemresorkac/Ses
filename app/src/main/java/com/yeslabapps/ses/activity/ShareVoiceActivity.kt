@@ -8,6 +8,8 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import android.widget.*
@@ -51,6 +53,7 @@ class ShareVoiceActivity : AppCompatActivity() {
     private val tagList = mutableListOf<String>()
     private lateinit var textContainer: LinearLayout
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShareVoiceBinding.inflate(layoutInflater)
@@ -69,38 +72,21 @@ class ShareVoiceActivity : AppCompatActivity() {
         }
 
 
-        binding.selectVoiceBtn.setOnClickListener { selectAndUploadAudio() }
+        binding.selectVoiceBtn.setOnClickListener {
+            if (DummyMethods.validatePermission(this)){
+                selectAudio()
+            }
+        }
+
 
 
         binding.playBtn.setOnClickListener{
-            if(pause){
-                mediaPlayer.seekTo(mediaPlayer.currentPosition)
-                mediaPlayer.start()
-                pause = false
-            }else{
-
-                mediaPlayer = MediaPlayer.create(applicationContext,audioUri)
-                mediaPlayer.start()
-
-            }
-            initializeSeekBar()
-            binding.playBtn.visibility = View.GONE
-            binding.pauseBtn.visibility = View.VISIBLE
-
-            mediaPlayer.setOnCompletionListener {
-                binding.playBtn.visibility = View.VISIBLE
-                binding.pauseBtn.visibility = View.GONE
-            }
+            play()
         }
 
         // Pause the media player
         binding.pauseBtn.setOnClickListener {
-            if(mediaPlayer.isPlaying){
-                mediaPlayer.pause()
-                pause = true
-                binding.playBtn.visibility = View.VISIBLE
-                binding.pauseBtn.visibility = View.GONE
-            }
+            pause()
         }
 
         // Seek bar change listener
@@ -117,6 +103,7 @@ class ShareVoiceActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar) {
             }
         })
+
 
 
         binding.tagsEt.setOnKeyListener { _, keyCode, event ->
@@ -141,7 +128,35 @@ class ShareVoiceActivity : AppCompatActivity() {
         }
 
 
+    private fun pause(){
+        if(mediaPlayer.isPlaying){
+            mediaPlayer.pause()
+            pause = true
+            binding.playBtn.visibility = View.VISIBLE
+            binding.pauseBtn.visibility = View.GONE
+        }
+    }
 
+    private fun play(){
+        if(pause){
+            mediaPlayer.seekTo(mediaPlayer.currentPosition)
+            mediaPlayer.start()
+            pause = false
+        }else{
+
+            mediaPlayer = MediaPlayer.create(applicationContext,audioUri)
+            mediaPlayer.start()
+
+        }
+        initializeSeekBar()
+        binding.playBtn.visibility = View.GONE
+        binding.pauseBtn.visibility = View.VISIBLE
+
+        mediaPlayer.setOnCompletionListener {
+            binding.playBtn.visibility = View.VISIBLE
+            binding.pauseBtn.visibility = View.GONE
+        }
+    }
 
 
     private fun initializeSeekBar() {
@@ -176,11 +191,11 @@ class ShareVoiceActivity : AppCompatActivity() {
         textContainer.removeAllViews()
         for (item in tagList) {
             val textView = TextView(this)
-            textView.text = "$item -"
+            textView.text = "$item (❌)"
             textView.textSize = 15F
             textView.setTextColor(resources.getColor(R.color.black))
             textView.setOnClickListener { view ->
-                val clickedItem = (view as TextView).text.toString().removeSuffix(" -")
+                val clickedItem = (view as TextView).text.toString().removeSuffix(" (❌)")
                 tagList.remove(clickedItem)
                 updateTextViews()
             }
@@ -188,13 +203,14 @@ class ShareVoiceActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun selectAndUploadAudio() {
+    private fun selectAudio() {
         val intent = Intent()
         intent.type = "audio/*"
         intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(Intent.createChooser(intent, "Select Audio"), PICK_AUDIO_REQUEST)
     }
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -206,7 +222,7 @@ class ShareVoiceActivity : AppCompatActivity() {
                 voiceTime = seconds
                 audioUri = data.data
                 binding.previewLayout.visibility = View.VISIBLE
-
+                play()
             }
             else{
                 recreate()
@@ -250,7 +266,8 @@ class ShareVoiceActivity : AppCompatActivity() {
                             "publisherId" to firebaseUser.uid,
                             "time" to strDate,
                             "voiceTime" to voiceTime,
-                            "tags" to tagList
+                            "tags" to tagList,
+                            "countOfLikes" to 0
                         )
 
                         firestore.collection("Voices")

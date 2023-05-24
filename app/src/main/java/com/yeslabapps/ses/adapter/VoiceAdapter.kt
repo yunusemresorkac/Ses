@@ -2,8 +2,14 @@ package com.yeslabapps.ses.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.text.TextUtils
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -11,8 +17,10 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yeslabapps.ses.R
+import com.yeslabapps.ses.activity.VoicesByTagsActivity
 import com.yeslabapps.ses.controller.DummyMethods.Companion.formatSecondsToMinutes
 import com.yeslabapps.ses.controller.DummyMethods.Companion.getTimeAgo
+import com.yeslabapps.ses.controller.DummyMethods.Companion.withSuffix
 import com.yeslabapps.ses.controller.LikeManager
 import com.yeslabapps.ses.databinding.VoiceItemBinding
 import com.yeslabapps.ses.interfaces.VoiceClick
@@ -38,7 +46,7 @@ class VoiceAdapter(private val voiceList : ArrayList<Voice>, val context: Contex
         return MyHolder(binding)
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "ResourceAsColor")
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
@@ -54,8 +62,38 @@ class VoiceAdapter(private val voiceList : ArrayList<Voice>, val context: Contex
                 tagsText.append("#").append(tag).append(" ")
             }
 
-            holder.binding.tags.text = tagsText.toString()
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            val linearLayout = LinearLayout(context)
+            linearLayout.layoutParams = layoutParams
+            linearLayout.orientation = LinearLayout.HORIZONTAL
+
+            for (tag in voice.tags) {
+                val textView = TextView(context)
+                textView.text = "#$tag"
+                textView.setSingleLine()
+                textView.ellipsize = TextUtils.TruncateAt.END
+                textView.maxLines = 1
+                textView.textSize = 18f
+                textView.setTextColor(context.resources.getColor(R.color.black))
+                textView.layoutParams = layoutParams
+
+                textView.setOnClickListener {
+                    context.startActivity(Intent(context, VoicesByTagsActivity::class.java)
+                        .putExtra("selectedTag",tag))
+                }
+
+                linearLayout.addView(textView)
+            }
+
+            holder.binding.tags.removeAllViews()
+            holder.binding.tags.addView(linearLayout)
         }
+
+
+
 
 
         holder.binding.countOfLikes.setOnClickListener {
@@ -70,6 +108,10 @@ class VoiceAdapter(private val voiceList : ArrayList<Voice>, val context: Contex
 
         holder.binding.username.setOnClickListener {
             onClick.clickUser(voiceList[position])
+        }
+
+        holder.binding.voiceActions.setOnClickListener {
+            onClick.voiceActions(voiceList[position])
         }
 
 
@@ -100,14 +142,14 @@ class VoiceAdapter(private val voiceList : ArrayList<Voice>, val context: Contex
         likeManager.startListening()
 
         holder.binding.likeVoiceBtn.setOnClickListener {
-            likeManager.toggleLike()
+            likeManager.toggleLike(voice)
         }
+
 
         getUserInfoForVoiceAdapter(voice.publisherId,holder)
 
 
     }
-
 
     private fun getUserInfoForVoiceAdapter(userId: String, holder : VoiceAdapter.MyHolder) {
         CoroutineScope(Dispatchers.IO).launch {

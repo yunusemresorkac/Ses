@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 
 import androidx.lifecycle.ViewModel
+import com.yeslabapps.ses.databinding.ActivityProfileBinding
 import com.yeslabapps.ses.databinding.FragmentProfileBinding
 import com.yeslabapps.ses.model.Voice
 import com.yeslabapps.ses.repo.FirebaseRepo
@@ -21,13 +22,16 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
     }
 
 
-    fun getVoicesByTopic(topicName : String){
-        repo.getVoicesByTopic(topicName)
+    fun getVoicesByTag(tagName : String){
+        repo.getVoicesByTag(tagName)
 
     }
 
     fun getUserInfo(userId: String?, binding: FragmentProfileBinding){
         repo.getUserInfo(userId, binding)
+    }
+    fun getUserInfoForActivity(userId: String?, binding: ActivityProfileBinding){
+        repo.getUserInfoForActivity(userId, binding)
     }
 
     fun getMyVoices(userId: String){

@@ -8,8 +8,11 @@ import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yeslabapps.ses.adapter.UserAdapter
+import com.yeslabapps.ses.controller.FollowManager
 import com.yeslabapps.ses.databinding.ActivitySearchBinding
 import com.yeslabapps.ses.interfaces.UserClick
 import com.yeslabapps.ses.model.User
@@ -23,6 +26,7 @@ class SearchActivity : AppCompatActivity(),UserClick {
 
     private lateinit var binding: ActivitySearchBinding
     private lateinit var userAdapter: UserAdapter
+    private var firebaseUser : FirebaseUser? = null
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +34,11 @@ class SearchActivity : AppCompatActivity(),UserClick {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        firebaseUser = FirebaseAuth.getInstance().currentUser
+
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
+
+        binding.searchUserEt.requestFocus()
 
 
         binding.searchUserEt.addTextChangedListener(textWatcher)
@@ -125,7 +133,7 @@ class SearchActivity : AppCompatActivity(),UserClick {
 
 
     override fun followUser(user: User) {
-
+        FollowManager().followUser(firebaseUser!!.uid,user.userId)
     }
 
 

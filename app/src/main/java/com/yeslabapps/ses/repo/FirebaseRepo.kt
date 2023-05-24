@@ -1,11 +1,13 @@
 package com.yeslabapps.ses.repo
 
 
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
+import com.yeslabapps.ses.databinding.ActivityProfileBinding
 import com.yeslabapps.ses.databinding.FragmentProfileBinding
 import com.yeslabapps.ses.model.User
 import com.yeslabapps.ses.model.Voice
@@ -62,17 +64,20 @@ class FirebaseRepo {
 
     }
 
-    fun getVoicesByTopic(topicName : String){
+    fun getVoicesByTag(tagName : String){
         CoroutineScope(Dispatchers.IO).launch {
             voiceList = ArrayList()
-            FirebaseFirestore.getInstance().collection(topicName).get()
+            FirebaseFirestore.getInstance().collection("Voices").get()
                 .addOnSuccessListener { queryDocumentSnapshots: QuerySnapshot ->
                     if (!queryDocumentSnapshots.isEmpty) {
                         val list = queryDocumentSnapshots.documents
                         for (d in list) {
                             val voice: Voice? = d.toObject(Voice::class.java)
                             if (voice != null) {
-                                voiceList?.add(voice)
+                                if (voice.tags!!.contains(tagName)){
+                                    voiceList?.add(voice)
+                                    println("taga göre liste ${voiceList.toString()}")
+                                }
                             }
                         }
                         mutableLiveData.postValue(voiceList)
@@ -91,6 +96,38 @@ class FirebaseRepo {
                             binding.username.text = user.username
                             binding.realName.text = user.firstName + " " + user.lastName
 
+                            if (user.profileVoice.isNotEmpty()){
+                                binding.playProfileVoiceBtn.visibility = View.VISIBLE
+                                binding.profileVoice.text = user.profileVoice
+                            }else{
+                                binding.playProfileVoiceBtn.visibility = View.GONE
+                            }
+
+                        }
+                    }
+                }
+        }
+
+
+    }
+
+    fun getUserInfoForActivity(userId: String?, binding: ActivityProfileBinding) {
+        CoroutineScope(Dispatchers.IO).launch {
+            FirebaseFirestore.getInstance().collection("Users").document(userId!!)
+                .get().addOnSuccessListener { documentSnapshot: DocumentSnapshot ->
+                    if (documentSnapshot.exists()) {
+                        val user: User? = documentSnapshot.toObject(User::class.java)
+                        if (user != null) {
+                            binding.username.text = user.username
+                            binding.realName.text = user.firstName + " " + user.lastName
+
+                            if (user.profileVoice.isNotEmpty()){
+                                binding.playProfileVoiceBtn.visibility = View.VISIBLE
+                                binding.profileVoice.text = user.profileVoice
+                            }else{
+                                binding.playProfileVoiceBtn.visibility = View.GONE
+                            }
+
                         }
                     }
                 }
@@ -104,7 +141,7 @@ class FirebaseRepo {
             voiceList = ArrayList()
 
             FirebaseFirestore.getInstance().collection("MyVoices").document(userId)
-                .collection("Voices").get()
+                .collection("Voices").orderBy("time",Query.Direction.DESCENDING).get()
                 .addOnSuccessListener { queryDocumentSnapshots: QuerySnapshot ->
                     if (!queryDocumentSnapshots.isEmpty) {
                         val list = queryDocumentSnapshots.documents

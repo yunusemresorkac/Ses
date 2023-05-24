@@ -234,15 +234,24 @@ class HomeFragment :Fragment(), VoiceClick {
 
 
     override fun pickVoice(voice: Voice) {
-        mediaPlayer?.release()
-        val voiceUri = voice.voiceUrl.toUri()
-        binding?.mainPlayer?.mainVoiceTitle?.text = voice.voiceTitle
-        mediaPlayer = MediaPlayer.create(context,voiceUri)
-        mediaPlayer!!.start()
-        initializeSeekBar()
-        binding?.mainPlayer?.playBtn?.visibility = View.GONE
-        binding?.mainPlayer?.pauseBtn?.visibility = View.VISIBLE
-        binding?.mainPlayer?.root?.visibility = View.VISIBLE
+        CoroutineScope(Dispatchers.IO).launch {
+            mediaPlayer?.release()
+            val voiceUri = voice.voiceUrl.toUri()
+            binding?.mainPlayer?.mainVoiceTitle?.text = voice.voiceTitle
+            mediaPlayer = MediaPlayer.create(context,voiceUri)
+
+            mediaPlayer?.setOnPreparedListener { mp ->
+                CoroutineScope(Dispatchers.Main).launch {
+                    mp.start()
+                    initializeSeekBar()
+                    binding?.mainPlayer?.playBtn?.visibility = View.GONE
+                    binding?.mainPlayer?.pauseBtn?.visibility = View.VISIBLE
+                    binding?.mainPlayer?.root?.visibility = View.VISIBLE
+                }
+            }
+        }
+
+
 
 
     }

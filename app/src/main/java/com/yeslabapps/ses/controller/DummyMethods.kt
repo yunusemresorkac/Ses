@@ -1,12 +1,22 @@
 package com.yeslabapps.ses.controller
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.text.format.DateUtils
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.ln
+import kotlin.math.pow
 import kotlin.random.Random
 
 class DummyMethods {
@@ -61,6 +71,38 @@ class DummyMethods {
             return ""
         }
 
+        fun validatePermission(context: Context ): Boolean {
+            var checkPermission = false
+            Dexter.withActivity(context as Activity?)
+                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(object : PermissionListener {
+                    override fun onPermissionGranted(response: PermissionGrantedResponse) {
+                        checkPermission = true
+                    }
+
+                    override fun onPermissionDenied(response: PermissionDeniedResponse) {
+                        checkPermission = false
+                    }
+
+                    override fun onPermissionRationaleShouldBeShown(
+                        permission: PermissionRequest?,
+                        token: PermissionToken
+                    ) {
+                        token.continuePermissionRequest()
+                    }
+                }).check()
+            return checkPermission
+        }
+
+        fun withSuffix(count: Int): String {
+            if (count < 1000) return "" + count
+            val exp = (ln(count.toDouble()) / ln(1000.0)).toInt()
+            return String.format(
+                "%.1f %c",
+                count / 1000.0.pow(exp.toDouble()),
+                "kMGTPE"[exp - 1]
+            )
+        }
 
 
     }

@@ -1,5 +1,6 @@
 package com.yeslabapps.ses.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -97,7 +98,11 @@ class LikedUsersActivity : AppCompatActivity(),UserClick {
         FollowManager().followUser(firebaseUser!!.uid,user.userId)
 
     }
-
+    override fun goProfile(user: User) {
+        val intent = Intent(this, ProfileActivity::class.java)
+        intent.putExtra("userId",user.userId)
+        startActivity(intent)
+    }
 
 
 

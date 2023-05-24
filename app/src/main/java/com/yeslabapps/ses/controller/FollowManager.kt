@@ -5,7 +5,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 
-class FollowManager() {
+class FollowManager {
 
     val db = FirebaseFirestore.getInstance()
     val usersCollection = db.collection("Users")

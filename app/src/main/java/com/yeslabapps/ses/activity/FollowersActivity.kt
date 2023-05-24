@@ -1,5 +1,6 @@
 package com.yeslabapps.ses.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +26,7 @@ class FollowersActivity : AppCompatActivity(), UserClick {
     private var idlist: ArrayList<String>? = null
     private var userList: ArrayList<User>? = null
     private var userAdapter: UserAdapter? = null
+    private var userId : String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,12 +34,14 @@ class FollowersActivity : AppCompatActivity(), UserClick {
         binding = ActivityFollowersBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        userId = intent.getStringExtra("followersId")
+
         firebaseUser = FirebaseAuth.getInstance().currentUser
         idlist = ArrayList()
 
         initRecycler()
 
-        getFollowers(firebaseUser!!.uid)
+        getFollowers(userId!!)
 
 
     }
@@ -96,5 +100,9 @@ class FollowersActivity : AppCompatActivity(), UserClick {
         FollowManager().followUser(firebaseUser!!.uid,user.userId)
     }
 
-
+    override fun goProfile(user: User) {
+        val intent = Intent(this, ProfileActivity::class.java)
+        intent.putExtra("userId",user.userId)
+        startActivity(intent)
+    }
 }

@@ -1,8 +1,11 @@
 package com.yeslabapps.ses.controller
 
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yeslabapps.ses.fragment.HomeFragment
+import com.yeslabapps.ses.model.Voice
+import java.util.HashMap
 
 class LikeManager(postId: String, userId: String , private val listener: LikeStatusListener) {
     private val likesCollection = FirebaseFirestore.getInstance().collection("Likes")
@@ -29,7 +32,7 @@ class LikeManager(postId: String, userId: String , private val listener: LikeSta
     }
 
     // Beğeni durumunu değiştiren fonksiyon
-    fun toggleLike() {
+    fun toggleLike(voice : Voice) {
         userLikeDocument.get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
@@ -37,6 +40,7 @@ class LikeManager(postId: String, userId: String , private val listener: LikeSta
                     userLikeDocument.delete()
                         .addOnSuccessListener {
                             myLikeDocument.delete()
+                            decreaseLikeCount(voice)
                             println("Beğeni kaldırıldı.")
                         }
                         .addOnFailureListener { e ->
@@ -47,6 +51,7 @@ class LikeManager(postId: String, userId: String , private val listener: LikeSta
                     userLikeDocument.set(mapOf("liked" to true))
                         .addOnSuccessListener {
                             myLikeDocument.set(mapOf("liked" to true))
+                            increaseLikeCount(voice)
                             println("Beğeni eklendi.")
                         }
                         .addOnFailureListener { e ->
@@ -57,6 +62,22 @@ class LikeManager(postId: String, userId: String , private val listener: LikeSta
             .addOnFailureListener { e ->
                 println("Beğeni durumu kontrol edilirken bir hata oluştu: $e")
             }
+    }
+
+    private fun increaseLikeCount(voice: Voice){
+        val map: HashMap<String, Any> = HashMap()
+        map["countOfLikes"] = FieldValue.increment(1)
+
+        FirebaseFirestore.getInstance().collection("Voices").document(voice.voiceId)
+            .update(map)
+    }
+
+    private fun decreaseLikeCount(voice: Voice){
+        val map: HashMap<String, Any> = HashMap()
+        map["countOfLikes"] = FieldValue.increment(-1)
+
+        FirebaseFirestore.getInstance().collection("Voices").document(voice.voiceId)
+            .update(map)
     }
 
     fun getLikesCountForVoice(postId: String): Task<Int> {

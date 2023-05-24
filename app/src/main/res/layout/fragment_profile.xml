@@ -50,6 +50,8 @@
             android:fontFamily="@font/montserrat"/>
 
 
+
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,6 +87,31 @@
             android:layout_below="@id/followings"
             android:layout_alignParentEnd="true"
             android:id="@+id/seeMyLikes"/>
+
+
+        <ImageView
+            android:id="@+id/playProfileVoiceBtn"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_below="@id/usernameImage"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:src="@drawable/play_square_svgrepo_com" />
+
+
+        <ImageView
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:src="@drawable/pause_square_svgrepo_com"
+            android:visibility="gone"
+            android:layout_below="@id/usernameImage"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:id="@+id/pauseProfileVoiceBtn"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/profileVoice"
+            android:visibility="invisible"/>
 
     </RelativeLayout>
 
