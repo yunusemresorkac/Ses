@@ -1,9 +1,12 @@
 package com.yeslabapps.ses.controller
 
+import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.yeslabapps.ses.R
 
 class FollowManager {
 
@@ -14,7 +17,7 @@ class FollowManager {
     var followListener: ListenerRegistration? = null
 
     // Kullanıcının takip durumunu güncelleyen ve buton metnini değiştiren fonksiyon
-    fun updateFollowButton(userId: String, targetUserId: String, followButton: MaterialButton) {
+    fun updateFollowButton(userId: String, targetUserId: String, followButton: ImageView) {
         val userFollowersCollection = usersCollection.document(userId).collection("Followings")
 
         followListener?.remove() // Eski listener'ı kaldır
@@ -22,10 +25,10 @@ class FollowManager {
         followListener = userFollowersCollection.document(targetUserId).addSnapshotListener { snapshot, _ ->
             if (snapshot != null && snapshot.exists()) {
                 // Kullanıcı takip ediliyorsa
-                followButton.text = "Takip Ediliyor"
+                followButton.setImageResource(R.drawable.user_remove_svgrepo_com)
             } else {
                 // Kullanıcı takip etmiyorsa
-                followButton.text = "Takip Et"
+                followButton.setImageResource(R.drawable.user_add_svgrepo_com__1_)
             }
         }
     }
@@ -37,10 +40,16 @@ class FollowManager {
         userFollowersCollection.document(userId).get().addOnSuccessListener { snapshot ->
             if (snapshot.exists()) {
                 // Kullanıcı zaten takip ediliyorsa, takipten çık
-                userFollowersCollection.document(userId).delete()
+                userFollowersCollection.document(userId).delete().addOnSuccessListener {
+                    FirebaseFirestore.getInstance().collection("Users")
+                        .document(targetUserId).update("followers",FieldValue.increment(-1))
+                }
+
             } else {
                 // Kullanıcıyı takip et
                 userFollowersCollection.document(userId).set(mapOf("followed" to true))
+                FirebaseFirestore.getInstance().collection("Users")
+                    .document(targetUserId).update("followers",FieldValue.increment(1))
             }
         }
 
@@ -65,7 +74,7 @@ class FollowManager {
 
         followingCollection.get().addOnSuccessListener { querySnapshot ->
             val followerCount = querySnapshot.size()
-            textView.text = "Takip Ediliyor $followerCount"
+            textView.text = "Following\n $followerCount"
 
         }
     }
@@ -80,7 +89,7 @@ class FollowManager {
 
         followersCollection.get().addOnSuccessListener { querySnapshot ->
             val followerCount = querySnapshot.size()
-            textView.text = "Takipçiler $followerCount"
+            textView.text = "Followers\n $followerCount"
 
             val map: HashMap<String, Any> = HashMap()
             map["followers"] = followerCount

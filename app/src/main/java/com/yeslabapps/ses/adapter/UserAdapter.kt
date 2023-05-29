@@ -43,6 +43,7 @@ class UserAdapter(private val userList: ArrayList<User>, val context: Context,
 
 
         holder.binding.username.text = user.username
+        holder.binding.followersCount.text = "${user.followers} Followers"
 
         holder.binding.followBtn.setOnClickListener {
             userClick.followUser(userList[position])

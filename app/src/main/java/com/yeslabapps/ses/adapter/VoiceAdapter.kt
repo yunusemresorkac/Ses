@@ -4,23 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
-import android.util.TypedValue
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yeslabapps.ses.R
 import com.yeslabapps.ses.activity.VoicesByTagsActivity
 import com.yeslabapps.ses.controller.DummyMethods.Companion.formatSecondsToMinutes
-import com.yeslabapps.ses.controller.DummyMethods.Companion.getTimeAgo
-import com.yeslabapps.ses.controller.DummyMethods.Companion.withSuffix
 import com.yeslabapps.ses.controller.LikeManager
 import com.yeslabapps.ses.databinding.VoiceItemBinding
 import com.yeslabapps.ses.interfaces.VoiceClick
@@ -29,8 +24,11 @@ import com.yeslabapps.ses.model.Voice
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class VoiceAdapter(private val voiceList : ArrayList<Voice>, val context: Context, val onClick: VoiceClick) : RecyclerView.Adapter<VoiceAdapter.MyHolder>() {
@@ -54,8 +52,9 @@ class VoiceAdapter(private val voiceList : ArrayList<Voice>, val context: Contex
         val voice = voiceList[position]
 
         holder.binding.voiceTitle.text = voice.voiceTitle
-        holder.binding.voiceTime.text = getTimeAgo(voice.time)
+        holder.binding.publishTime.text = getTimeAgo(voice.time)
         holder.binding.voiceSeconds.text = formatSecondsToMinutes(voice.voiceTime)
+
         if (voice.tags!=null){
             val tagsText = StringBuilder()
             for (tag in voice.tags) {
@@ -132,12 +131,16 @@ class VoiceAdapter(private val voiceList : ArrayList<Voice>, val context: Contex
             }
         })
 
-        likeManager.getLikesCountForVoice(voice.voiceId)
-            .addOnSuccessListener { likesCount ->
-                holder.binding.countOfLikes.text = likesCount.toString()
-            }
-            .addOnFailureListener {
-            }
+        holder.binding.countOfLikes.text = voice.countOfLikes.toString()
+
+
+//
+//        likeManager.getLikesCountForVoice(voice.voiceId)
+//            .addOnSuccessListener { likesCount ->
+//                holder.binding.countOfLikes.text = likesCount.toString()
+//            }
+//            .addOnFailureListener {
+//            }
 
         likeManager.startListening()
 
@@ -150,22 +153,43 @@ class VoiceAdapter(private val voiceList : ArrayList<Voice>, val context: Contex
 
 
     }
+    private fun getTimeAgo(date: String): String {
+        val sdf = SimpleDateFormat("EE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
+        val fromTimeZone = "UTC"
+        sdf.timeZone = TimeZone.getTimeZone(fromTimeZone)
+        try {
+            val time: Long = sdf.parse(date)!!.time
+            val now = System.currentTimeMillis()
+            val ago = DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS)
+            return ago.toString() + ""
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return ""
+    }
 
-    private fun getUserInfoForVoiceAdapter(userId: String, holder : VoiceAdapter.MyHolder) {
-        CoroutineScope(Dispatchers.IO).launch {
-            FirebaseFirestore.getInstance().collection("Users").document(userId)
-                .get().addOnSuccessListener { documentSnapshot: DocumentSnapshot ->
-                    if (documentSnapshot.exists()) {
-                        val user: User? = documentSnapshot.toObject(User::class.java)
-                        if (user != null) {
-                            holder.binding.username.text = user.username
 
-                        }
+    private fun getUserInfoForVoiceAdapter(userId: String, holder: VoiceAdapter.MyHolder) {
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val documentSnapshot = withContext(Dispatchers.IO) {
+                    FirebaseFirestore.getInstance()
+                        .collection("Users")
+                        .document(userId)
+                        .get()
+                        .await()
+                }
+
+                if (documentSnapshot.exists()) {
+                    val user: User? = documentSnapshot.toObject(User::class.java)
+                    user?.let {
+                        holder.binding.username.text = "@${user.username}"
                     }
                 }
+            } catch (e: Exception) {
+                // Hata durumunda yapılacak işlemler
+            }
         }
-
-
     }
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,13 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/toolbar"
-        android:background="#FFC107">
+        android:backgroundTint="@color/itemOrange"
+        android:background="@drawable/login_bg">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Share Voice"
-            android:textSize="16sp"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:textColor="@color/black"
             android:fontFamily="@font/montserrat"/>
 
@@ -33,6 +35,7 @@
         android:padding="@dimen/_10sdp"
         android:hint="Title"
         android:textColorHint="@color/black"
+        android:layout_below="@id/toolbar"
         android:maxLength="40"
         android:textColor="@color/black"
         android:id="@+id/voiceTitleEt"/>
@@ -43,6 +46,7 @@
         android:layout_margin="@dimen/_10sdp"
         android:background="@drawable/rect_border"
         android:maxLines="1"
+        android:layout_below="@id/voiceTitleEt"
         android:padding="@dimen/_10sdp"
         android:hint="Tags"
         android:textColorHint="@color/black"
@@ -55,6 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_below="@id/tagsEt"
         android:textSize="16sp"
         android:layout_margin="@dimen/_10sdp"
         android:padding="@dimen/_5sdp"
@@ -70,8 +75,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:id="@+id/previewLayout"
-        android:visibility="gone"
         android:gravity="center"
+        android:visibility="gone"
+        android:layout_below="@id/textContainer"
         android:orientation="horizontal">
 
         <ImageView
@@ -128,24 +134,42 @@
     </LinearLayout>
 
 
-
-
-
-
-
-
-    <com.google.android.material.button.MaterialButton
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_20sdp"
-        android:text="Select Voice"
-        android:id="@+id/selectVoiceBtn"/>
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_20sdp"
-        android:text="Complete"
-        android:id="@+id/sendVoiceBtn"/>
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_20sdp"
+            android:text="@string/select_voice"
+            android:drawableLeft="@drawable/media_record_svgrepo_com"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textAllCaps="false"
+            android:id="@+id/selectVoiceBtn"/>
 
-</LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_20sdp"
+            android:textColor="@color/black"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:drawableLeft="@drawable/ic_check_black_24dp"
+
+            android:text="@string/complete"
+            android:id="@+id/sendVoiceBtn"/>
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+</RelativeLayout>

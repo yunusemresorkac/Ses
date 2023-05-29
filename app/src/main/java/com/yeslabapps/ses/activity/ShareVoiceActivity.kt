@@ -1,6 +1,5 @@
 package com.yeslabapps.ses.activity
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
@@ -8,24 +7,24 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
-import android.widget.*
+import android.widget.LinearLayout
+import android.widget.SeekBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.yeslabapps.ses.R
 import com.yeslabapps.ses.controller.DummyMethods
 import com.yeslabapps.ses.databinding.ActivityShareVoiceBinding
 import com.yeslabapps.ses.util.Constants
-import kotlinx.android.synthetic.main.activity_share_voice.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.yeslabapps.ses.viewmodel.FirebaseViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -40,7 +39,7 @@ class ShareVoiceActivity : AppCompatActivity() {
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()
 
-    private lateinit var mediaPlayer: MediaPlayer
+    private  var mediaPlayer: MediaPlayer? = null
     private lateinit var runnable:Runnable
     private var handler: Handler = Handler()
     private var pause:Boolean = false
@@ -52,6 +51,7 @@ class ShareVoiceActivity : AppCompatActivity() {
     private val MAX_LIST_SIZE = 5
     private val tagList = mutableListOf<String>()
     private lateinit var textContainer: LinearLayout
+    private val firebaseViewModel by viewModel<FirebaseViewModel>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +59,10 @@ class ShareVoiceActivity : AppCompatActivity() {
         binding = ActivityShareVoiceBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        binding.toolbar.setNavigationOnClickListener { finish() }
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
         textContainer = findViewById(R.id.textContainer)
@@ -93,7 +97,7 @@ class ShareVoiceActivity : AppCompatActivity() {
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
                 if (b) {
-                    mediaPlayer.seekTo(i * 1000)
+                    mediaPlayer?.seekTo(i * 1000)
                 }
             }
 
@@ -117,6 +121,7 @@ class ShareVoiceActivity : AppCompatActivity() {
         updateTextViews()
 
     }
+
     val MediaPlayer.seconds:Int
         get() {
             return this.duration / 1000
@@ -129,8 +134,8 @@ class ShareVoiceActivity : AppCompatActivity() {
 
 
     private fun pause(){
-        if(mediaPlayer.isPlaying){
-            mediaPlayer.pause()
+        if(mediaPlayer!!.isPlaying){
+            mediaPlayer!!.pause()
             pause = true
             binding.playBtn.visibility = View.VISIBLE
             binding.pauseBtn.visibility = View.GONE
@@ -139,20 +144,20 @@ class ShareVoiceActivity : AppCompatActivity() {
 
     private fun play(){
         if(pause){
-            mediaPlayer.seekTo(mediaPlayer.currentPosition)
-            mediaPlayer.start()
+            mediaPlayer?.seekTo(mediaPlayer!!.currentPosition)
+            mediaPlayer?.start()
             pause = false
         }else{
 
             mediaPlayer = MediaPlayer.create(applicationContext,audioUri)
-            mediaPlayer.start()
+            mediaPlayer!!.start()
 
         }
         initializeSeekBar()
         binding.playBtn.visibility = View.GONE
         binding.pauseBtn.visibility = View.VISIBLE
 
-        mediaPlayer.setOnCompletionListener {
+        mediaPlayer?.setOnCompletionListener {
             binding.playBtn.visibility = View.VISIBLE
             binding.pauseBtn.visibility = View.GONE
         }
@@ -160,13 +165,13 @@ class ShareVoiceActivity : AppCompatActivity() {
 
 
     private fun initializeSeekBar() {
-        binding.seekBar.max = mediaPlayer.seconds
+        binding.seekBar.max = mediaPlayer!!.seconds
 
         runnable = Runnable {
-            binding.seekBar.progress = mediaPlayer.currentSeconds
+            binding.seekBar.progress = mediaPlayer!!.currentSeconds
 
-            binding.tvPass.text = "${mediaPlayer.currentSeconds} sec"
-            val diff = mediaPlayer.seconds - mediaPlayer.currentSeconds
+            binding.tvPass.text = "${mediaPlayer!!.currentSeconds} sec"
+            val diff = mediaPlayer!!.seconds - mediaPlayer!!.currentSeconds
             binding.tvDue.text = "$diff sec"
 
             handler.postDelayed(runnable, 1000)
@@ -258,6 +263,13 @@ class ShareVoiceActivity : AppCompatActivity() {
                         val sdf = SimpleDateFormat("EE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
                         val strDate: String = sdf.format(date)
 
+                        var userCountry = ""
+                        firebaseViewModel.getUserCountry(firebaseUser.uid) { country ->
+                            // Burada ülke değeri kullanılabilir
+                            println(country)
+
+                            userCountry = country
+                        }
 
                         val voice = hashMapOf(
                             "voiceTitle" to voiceTitle,
@@ -267,7 +279,8 @@ class ShareVoiceActivity : AppCompatActivity() {
                             "time" to strDate,
                             "voiceTime" to voiceTime,
                             "tags" to tagList,
-                            "countOfLikes" to 0
+                            "countOfLikes" to 0,
+                            "relatedCountry" to  userCountry
                         )
 
                         firestore.collection("Voices")
@@ -309,6 +322,22 @@ class ShareVoiceActivity : AppCompatActivity() {
         checkForSend()
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.seekBar.progress = 0
+        mediaPlayer?.stop()
+        mediaPlayer?.reset()
+        mediaPlayer?.release()
+        if (mediaPlayer!=null){
+            handler.removeCallbacks(runnable)
+
+        }
+        mediaPlayer = null
+
+
+    }
+
 
 
 }

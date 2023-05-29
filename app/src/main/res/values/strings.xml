@@ -16,4 +16,8 @@
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="explore">Explore</string>
+    <string name="select_voice">Select Voice</string>
+    <string name="you_are_not_following_anyone_let_s_discover_new_channels">You are not following anyone. Let\'s discover new channels.</string>
+    <string name="options">Options</string>
+    <string name="here_the_most_popular_posts_according_to_your_country_will_be_displayed">Here, the most popular posts according to your country will be displayed</string>
 </resources>

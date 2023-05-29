@@ -1,6 +1,7 @@
 package com.yeslabapps.ses.activity
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Intent
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,7 @@ import com.yeslabapps.ses.viewmodel.MyLikesViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MyLikesActivity : AppCompatActivity(),VoiceClick {
@@ -42,6 +44,12 @@ class MyLikesActivity : AppCompatActivity(),VoiceClick {
         super.onCreate(savedInstanceState)
         binding = ActivityMyLikesBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        binding.toolbar.setNavigationOnClickListener { finish() }
+
 
         firebaseUser = FirebaseAuth.getInstance().currentUser
 
@@ -129,13 +137,12 @@ class MyLikesActivity : AppCompatActivity(),VoiceClick {
 
                 mediaPlayer!!.pause()
                 pause = true
-                binding?.mainPlayer?.playBtn?.visibility = View.VISIBLE
-                binding?.mainPlayer?.pauseBtn?.visibility = View.GONE
+                binding.mainPlayer.playBtn.visibility = View.VISIBLE
+                binding.mainPlayer.pauseBtn.visibility = View.GONE
             }
         }
 
     }
-
 
     private fun initRecycler() {
         voiceList = ArrayList()
@@ -143,8 +150,6 @@ class MyLikesActivity : AppCompatActivity(),VoiceClick {
         binding.recyclerView.setHasFixedSize(true)
         voiceAdapter = VoiceAdapter(voiceList!!, this,this)
         binding.recyclerView.adapter = voiceAdapter
-        val dividerItemDecoration = DividerItemDecoration(binding.recyclerView.context, DividerItemDecoration.VERTICAL)
-        binding.recyclerView.addItemDecoration(dividerItemDecoration)
     }
 
 
@@ -178,17 +183,33 @@ class MyLikesActivity : AppCompatActivity(),VoiceClick {
 
 
 
-
     override fun pickVoice(voice: Voice) {
-        mediaPlayer?.release()
-        val voiceUri = voice.voiceUrl.toUri()
-        binding.mainPlayer.mainVoiceTitle.text = voice.voiceTitle
-        mediaPlayer = MediaPlayer.create(this,voiceUri)
-        mediaPlayer!!.start()
-        initializeSeekBar()
-        binding.mainPlayer.playBtn.visibility = View.GONE
-        binding.mainPlayer.pauseBtn.visibility = View.VISIBLE
-        binding.mainPlayer.root.visibility = View.VISIBLE
+        CoroutineScope(Dispatchers.Main).launch {
+            val pd = ProgressDialog(this@MyLikesActivity,R.style.CustomDialog)
+            pd.setCancelable(false)
+            pd.show()
+            mediaPlayer?.release()
+            val voiceUri = voice.voiceUrl.toUri()
+
+            withContext(Dispatchers.IO) {
+                mediaPlayer = MediaPlayer().apply {
+                    setDataSource(this@MyLikesActivity, voiceUri)
+                    setOnPreparedListener {
+                        // MediaPlayer hazır olduğunda yapılacak işlemler
+                        binding.mainPlayer.mainVoiceTitle.text = voice.voiceTitle
+                        mediaPlayer!!.start()
+                        initializeSeekBar()
+                        binding.mainPlayer.playBtn.visibility = View.GONE
+                        binding.mainPlayer.pauseBtn.visibility = View.VISIBLE
+                        binding.mainPlayer.root.visibility = View.VISIBLE
+                        pd.dismiss()
+
+                    }
+                    prepareAsync()
+
+                }
+            }
+        }
 
 
     }

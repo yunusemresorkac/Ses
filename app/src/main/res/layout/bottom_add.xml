@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@drawable/login_card_bg"
     android:layout_height="wrap_content">
 
 
@@ -16,7 +17,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/appOrange"
+            android:background="@color/itemOrange"
+            android:foreground="?selectableItemBackground"
+
             android:padding="@dimen/_4sdp">
 
 
@@ -52,7 +55,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/appOrange"
+            android:background="@color/itemOrange"
+            android:foreground="?selectableItemBackground"
             android:padding="@dimen/_4sdp">
 
 

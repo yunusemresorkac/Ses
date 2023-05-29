@@ -1,5 +1,6 @@
 package com.yeslabapps.ses.activity
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ import com.yeslabapps.ses.viewmodel.FirebaseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VoicesByTagsActivity : AppCompatActivity(), VoiceClick {
@@ -37,6 +39,12 @@ class VoicesByTagsActivity : AppCompatActivity(), VoiceClick {
         super.onCreate(savedInstanceState)
         binding = ActivityVoicesByTagsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        binding.toolbar.setNavigationOnClickListener { finish() }
 
         tagName = intent.getStringExtra("selectedTag")
 
@@ -76,8 +84,6 @@ class VoicesByTagsActivity : AppCompatActivity(), VoiceClick {
         binding.recyclerView.setHasFixedSize(true)
         voiceAdapter = VoiceAdapter(voiceList!!, this,this)
         binding.recyclerView.adapter = voiceAdapter
-        val dividerItemDecoration = DividerItemDecoration(binding.recyclerView.context, DividerItemDecoration.VERTICAL)
-        binding.recyclerView.addItemDecoration(dividerItemDecoration)
     }
 
 
@@ -172,26 +178,33 @@ class VoicesByTagsActivity : AppCompatActivity(), VoiceClick {
 
 
 
-
     override fun pickVoice(voice: Voice) {
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.Main).launch {
+            val pd = ProgressDialog(this@VoicesByTagsActivity,R.style.CustomDialog)
+            pd.setCancelable(false)
+            pd.show()
             mediaPlayer?.release()
             val voiceUri = voice.voiceUrl.toUri()
-            binding.mainPlayer.mainVoiceTitle.text = voice.voiceTitle
-            mediaPlayer = MediaPlayer.create(this@VoicesByTagsActivity,voiceUri)
 
-            mediaPlayer?.setOnPreparedListener { mp ->
-                CoroutineScope(Dispatchers.Main).launch {
-                    mp.start()
-                    initializeSeekBar()
-                    binding.mainPlayer.playBtn.visibility = View.GONE
-                    binding.mainPlayer.pauseBtn.visibility = View.VISIBLE
-                    binding.mainPlayer.root.visibility = View.VISIBLE
+            withContext(Dispatchers.IO) {
+                mediaPlayer = MediaPlayer().apply {
+                    setDataSource(this@VoicesByTagsActivity, voiceUri)
+                    setOnPreparedListener {
+                        // MediaPlayer hazır olduğunda yapılacak işlemler
+                        binding.mainPlayer.mainVoiceTitle.text = voice.voiceTitle
+                        mediaPlayer!!.start()
+                        initializeSeekBar()
+                        binding.mainPlayer.playBtn.visibility = View.GONE
+                        binding.mainPlayer.pauseBtn.visibility = View.VISIBLE
+                        binding.mainPlayer.root.visibility = View.VISIBLE
+                        pd.dismiss()
+
+                    }
+                    prepareAsync()
+
                 }
             }
         }
-
-
 
 
     }

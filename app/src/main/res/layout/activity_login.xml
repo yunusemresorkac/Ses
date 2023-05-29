@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
+    android:background="@color/itemOrange"
     tools:context=".activity.LoginActivity">
 
 
@@ -13,7 +13,9 @@
         android:id="@+id/loginInfoLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/login_lay_bg"
         android:gravity="center"
+
         android:padding="@dimen/_5sdp"
         android:layout_marginTop="@dimen/_20sdp"
         android:orientation="horizontal">
@@ -27,9 +29,10 @@
             android:layout_marginStart="@dimen/_5sdp"
             android:text="@string/login"
             android:background="@drawable/rect_border"
-            android:backgroundTint="@color/black"
-            android:fontFamily="@font/alata"
-            android:textColor="@color/black"
+            android:foreground="?selectableItemBackground"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/montserrat"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -42,10 +45,11 @@
             android:background="@drawable/rect_border"
             android:padding="@dimen/_7sdp"
             android:text="@string/register"
-            android:backgroundTint="@color/black"
-            android:fontFamily="@font/alata"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/montserrat"
+            android:foreground="?selectableItemBackground"
 
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -59,9 +63,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/loginInfoLayout"
         android:layout_centerInParent="true"
-        android:visibility="gone"
         android:layout_marginTop="@dimen/_10sdp"
         app:cardCornerRadius="@dimen/_3sdp"
+        android:visibility="gone"
         app:cardElevation="@dimen/_3sdp"
         app:cardUseCompatPadding="true"
         >
@@ -70,6 +74,8 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/login_card_bg"
+
             />
 
         <ScrollView
@@ -90,17 +96,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/rect_border"
-                    android:backgroundTint="@color/black"
+                    android:backgroundTint="@color/white"
                     android:drawableStart="@drawable/ic_baseline_email_24"
                     android:drawablePadding="@dimen/_5sdp"
-                    android:drawableTint="@color/black"
-                    android:fontFamily="@font/alata"
+                    android:drawableTint="@color/white"
+                    android:fontFamily="@font/montserrat"
                     android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:padding="@dimen/_10sdp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/black"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
                     android:textSize="15sp" />
 
 
@@ -110,34 +116,31 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
                     android:background="@drawable/rect_border"
-                    android:backgroundTint="@color/black"
+                    android:backgroundTint="@color/white"
                     android:drawableStart="@drawable/ic_baseline_password_24"
                     android:drawablePadding="@dimen/_5sdp"
-                    android:drawableTint="@color/black"
-                    android:fontFamily="@font/alata"
+                    android:drawableTint="@color/white"
+                    android:fontFamily="@font/montserrat"
 
                     android:hint="@string/password"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:padding="@dimen/_10sdp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/black"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
                     android:textSize="15sp" />
 
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/_10sdp"
-                    android:background="@drawable/button_background"
-                    android:backgroundTint="@color/appOrange"
-
-                    android:fontFamily="@font/alata"
+                    android:fontFamily="@font/montserrat"
                     android:text="@string/login"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
 
 
@@ -148,9 +151,9 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/_15sdp"
                     android:background="?android:selectableItemBackground"
-                    android:fontFamily="@font/alata"
+                    android:fontFamily="@font/montserrat"
                     android:text="@string/forgot_password"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -170,6 +173,8 @@
         android:layout_below="@id/loginInfoLayout"
         android:layout_centerInParent="true"
         android:id="@+id/registerLayout"
+
+
         android:layout_marginTop="@dimen/_10sdp"
         app:cardCornerRadius="@dimen/_3sdp"
         app:cardElevation="@dimen/_3sdp"
@@ -180,6 +185,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/login_card_bg"
            />
 
         <ScrollView
@@ -200,20 +206,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/_10sdp"
-                    android:drawableStart="@drawable/ic_baseline_email_24"
+                    android:drawableStart="@drawable/id_svgrepo_com"
                     android:drawablePadding="@dimen/_5sdp"
-                    android:drawableTint="@color/black"
+                    android:drawableTint="@color/white"
                     android:hint="First Name"
-                    android:fontFamily="@font/alata"
+                    android:maxLength="15"
+
+                    android:fontFamily="@font/montserrat"
                     android:background="@drawable/rect_border"
                     android:inputType="textEmailAddress"
-                    android:backgroundTint="@color/black"
+                    android:backgroundTint="@color/white"
                     android:layout_marginTop="@dimen/_2sdp"
 
                     android:maxLines="1"
-                    android:textColorHint="@color/black"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"/>
+                    android:textColorHint="@color/white"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"/>
 
 
 
@@ -223,19 +231,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/_10sdp"
-                    android:drawableStart="@drawable/ic_baseline_email_24"
+                    android:drawableStart="@drawable/id_svgrepo_com"
                     android:drawablePadding="@dimen/_5sdp"
-                    android:drawableTint="@color/black"
+                    android:drawableTint="@color/white"
                     android:hint="Last Name"
-                    android:fontFamily="@font/alata"
+                    android:maxLength="15"
+
+                    android:fontFamily="@font/montserrat"
                     android:background="@drawable/rect_border"
                     android:inputType="textEmailAddress"
-                    android:backgroundTint="@color/black"
+                    android:backgroundTint="@color/white"
                     android:layout_marginTop="@dimen/_8sdp"
 
                     android:maxLines="1"
-                    android:textColorHint="@color/black"
-                    android:textColor="@color/black"
+                    android:textColorHint="@color/white"
+                    android:textColor="@color/white"
                     android:textSize="15sp"/>
 
 
@@ -250,17 +260,19 @@
                     android:padding="@dimen/_10sdp"
                     android:drawableStart="@drawable/ic_baseline_email_24"
                     android:drawablePadding="@dimen/_5sdp"
-                    android:drawableTint="@color/black"
+                    android:drawableTint="@color/white"
                     android:hint="@string/email"
-                    android:fontFamily="@font/alata"
+                    android:maxLength="45"
+
+                    android:fontFamily="@font/montserrat"
                     android:background="@drawable/rect_border"
                     android:inputType="textEmailAddress"
-                    android:backgroundTint="@color/black"
+                    android:backgroundTint="@color/white"
                     android:layout_marginTop="@dimen/_8sdp"
 
                     android:maxLines="1"
-                    android:textColorHint="@color/black"
-                    android:textColor="@color/black"
+                    android:textColorHint="@color/white"
+                    android:textColor="@color/white"
                     android:textSize="15sp"/>
 
 
@@ -273,17 +285,18 @@
                     android:padding="@dimen/_10sdp"
                     android:drawableStart="@drawable/ic_baseline_password_24"
                     android:drawablePadding="@dimen/_5sdp"
-                    android:drawableTint="@color/black"
-                    android:backgroundTint="@color/black"
+                    android:drawableTint="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:maxLength="25"
 
                     android:hint="@string/password"
-                    android:fontFamily="@font/alata"
+                    android:fontFamily="@font/montserrat"
                     android:layout_marginTop="@dimen/_8sdp"
                     android:background="@drawable/rect_border"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:textColorHint="@color/black"
-                    android:textColor="@color/black"
+                    android:textColorHint="@color/white"
+                    android:textColor="@color/white"
                     android:textSize="15sp" />
 
 
@@ -295,30 +308,33 @@
                     android:padding="@dimen/_10sdp"
                     android:drawableStart="@drawable/ic_baseline_person_24"
                     android:drawablePadding="@dimen/_5sdp"
-                    android:drawableTint="@color/black"
+                    android:drawableTint="@color/white"
                     android:hint="@string/username"
-                    android:fontFamily="@font/alata"
-                    android:backgroundTint="@color/black"
-
+                    android:fontFamily="@font/montserrat"
+                    android:backgroundTint="@color/white"
+                    android:maxLength="15"
                     android:layout_marginTop="@dimen/_8sdp"
                     android:background="@drawable/rect_border"
                     android:maxLines="1"
-                    android:textColorHint="@color/black"
-                    android:textColor="@color/black"
+                    android:textColorHint="@color/white"
+                    android:textColor="@color/white"
                     android:textSize="15sp"/>
 
                 <com.chivorn.smartmaterialspinner.SmartMaterialSpinner
                     android:id="@+id/countrySpinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_10sdp"
                     app:smsp_isSearchable="true"
-                    app:smsp_floatingLabelColor="#1976D2"
+                    app:smsp_floatingLabelColor="@color/white"
                     app:smsp_hintSize="16sp"
-                    app:smsp_floatingLabelText="Topic"
+                    app:smsp_floatingLabelText="Country"
+                    android:layout_marginTop="@dimen/_8sdp"
                     app:smsp_hint="Country"
-                    app:smsp_hintColor="#F4511E"
-                    app:smsp_itemColor="#512DA8"
+                    app:smsp_searchHeaderText="Country"
+                    app:smsp_hintColor="@color/white"
+                    app:smsp_itemColor="@color/white"
+                    android:background="@drawable/rect_border"
+                    android:backgroundTint="@color/white"
                     app:smsp_itemListColor="#7C4DFF"
                     app:smsp_itemListHintBackgroundColor="#808080"
                     app:smsp_itemListHintColor="#FFFFFF"
@@ -328,18 +344,16 @@
 
 
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnRegister"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/_10sdp"
-                    android:background="@drawable/button_background"
-                    android:backgroundTint="@color/appOrange"
                     android:fontFamily="@font/alata"
                     android:text="@string/register"
                     android:textAllCaps="false"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
                 
 

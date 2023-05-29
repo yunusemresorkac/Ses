@@ -24,6 +24,7 @@ import com.yeslabapps.ses.controller.DummyMethods
 import com.yeslabapps.ses.databinding.ActivityStartBinding
 import com.yeslabapps.ses.fragment.ExploreFragment
 import com.yeslabapps.ses.fragment.HomeFragment
+import com.yeslabapps.ses.fragment.OptionsFragment
 import com.yeslabapps.ses.fragment.ProfileFragment
 import com.yeslabapps.ses.util.Constants
 import java.text.SimpleDateFormat
@@ -59,6 +60,7 @@ class StartActivity : AppCompatActivity() {
 
                 R.id.navExplore -> selectorFragment = ExploreFragment()
                 R.id.navProfile -> selectorFragment = ProfileFragment()
+                R.id.navOptions -> selectorFragment = OptionsFragment()
 
             }
             if (selectorFragment != null) {

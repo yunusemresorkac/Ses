@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -23,12 +24,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.yeslabapps.ses.R
 import com.yeslabapps.ses.activity.*
 import com.yeslabapps.ses.adapter.VoiceAdapter
+import com.yeslabapps.ses.controller.DummyMethods
 import com.yeslabapps.ses.controller.FollowManager
 import com.yeslabapps.ses.databinding.FragmentProfileBinding
 import com.yeslabapps.ses.interfaces.VoiceClick
 import com.yeslabapps.ses.model.Voice
 import com.yeslabapps.ses.viewmodel.FirebaseViewModel
-import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -71,7 +72,6 @@ class ProfileFragment: Fragment(),VoiceClick {
         getMyVoices()
         getUserInfo()
 
-        binding?.seeMyLikes?.setOnClickListener {  startActivity(Intent(context,MyLikesActivity::class.java)) }
 
         binding?.mainPlayer?.playBtn?.setOnClickListener { play() }
         binding?.mainPlayer?.pauseBtn?.setOnClickListener { pause() }
@@ -111,8 +111,16 @@ class ProfileFragment: Fragment(),VoiceClick {
 
                 if (dy > 0 && bottomMenu.visibility == View.VISIBLE) {
                     bottomMenu.visibility = View.GONE
+                    if (voiceList?.size!! >8){
+                        binding!!.followLay.visibility = View.GONE
+
+
+                    }
                 } else if (dy < 0 && bottomMenu.visibility != View.VISIBLE) {
                     bottomMenu.visibility = View.VISIBLE
+                    binding!!.followLay.visibility = View.VISIBLE
+
+
 
                 }
             }
@@ -126,6 +134,7 @@ class ProfileFragment: Fragment(),VoiceClick {
     private fun followInfo(){
         FollowManager().getFollowerCount(firebaseUser.uid,binding!!.followers)
         FollowManager().getFollowingCount(firebaseUser.uid,binding!!.followings)
+
 
     }
 
@@ -143,15 +152,24 @@ class ProfileFragment: Fragment(),VoiceClick {
         viewModel.getUserInfo(firebaseUser.uid, binding!!)
     }
 
+
     private fun getMyVoices() {
         viewModel.getAllVoices().observe(viewLifecycleOwner) { voices ->
 
             voiceList?.addAll(voices!!)
             voiceAdapter?.notifyDataSetChanged()
+            if (voiceList?.size!! >0){
+                binding?.totalVoices?.text = " Voices \n${voiceList?.size}"
+            }else{
+                binding?.totalVoices?.text = " Voices \n0"
+            }
         }
-
         viewModel.getMyVoices(firebaseUser.uid)
-
+        if (voiceList?.size!! >0){
+            binding?.totalVoices?.text = " Voices \n${voiceList?.size}"
+        }else{
+            binding?.totalVoices?.text = " Voices \n0"
+        }
 
     }
 
@@ -254,6 +272,8 @@ class ProfileFragment: Fragment(),VoiceClick {
 
     override fun pickVoice(voice: Voice) {
         CoroutineScope(Dispatchers.Main).launch {
+            DummyMethods.increaseViewedNumber(voice)
+
             val pd = ProgressDialog(context,R.style.CustomDialog)
             pd.setCancelable(false)
             pd.show()
@@ -291,11 +311,12 @@ class ProfileFragment: Fragment(),VoiceClick {
     }
 
     override fun clickUser(voice: Voice) {
-        destroyMedia()
-
-        val intent = Intent(context,ProfileActivity::class.java)
-        intent.putExtra("userId",voice.publisherId)
-        startActivity(intent)
+        println("Not necessary")
+//        destroyMedia()
+//
+//        val intent = Intent(context,ProfileActivity::class.java)
+//        intent.putExtra("userId",voice.publisherId)
+//        startActivity(intent)
     }
 
 

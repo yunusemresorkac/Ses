@@ -6,11 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".activity.MyLikesActivity">
 
-
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/toolbar"
+        android:backgroundTint="@color/itemOrange"
+        android:background="@drawable/login_bg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Likes"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:fontFamily="@font/montserrat"
+            android:textSize="18sp"/>
+
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:layout_height="wrap_content"
         android:id="@+id/recyclerView"/>
 
 

@@ -7,5 +7,7 @@ data class Voice(val voiceTitle : String="",
                 val time : String="",
                 val voiceTime : Int = 0,
                 val tags: List<String>?= null,
-                var countOfLikes : Int = 0)
+                var countOfLikes : Int = 0,
+                val relatedCountry : String = "",
+                var listened : Int = 0)
 

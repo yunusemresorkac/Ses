@@ -18,11 +18,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.yeslabapps.ses.R
 import com.yeslabapps.ses.activity.LikedUsersActivity
 import com.yeslabapps.ses.activity.ProfileActivity
 import com.yeslabapps.ses.activity.SearchActivity
 import com.yeslabapps.ses.adapter.VoiceAdapter
+import com.yeslabapps.ses.controller.DummyMethods.Companion.increaseViewedNumber
 import com.yeslabapps.ses.databinding.FragmentHomeBinding
 import com.yeslabapps.ses.interfaces.VoiceClick
 import com.yeslabapps.ses.model.Voice
@@ -30,7 +33,9 @@ import com.yeslabapps.ses.viewmodel.FirebaseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.HashMap
 
 
 class HomeFragment :Fragment(), VoiceClick {
@@ -67,7 +72,10 @@ class HomeFragment :Fragment(), VoiceClick {
         initRecycler()
         getVoices()
 
-        binding?.goSearch?.setOnClickListener { startActivity(Intent(context,SearchActivity::class.java)) }
+        binding?.goSearch?.setOnClickListener {
+            destroyMedia()
+            startActivity(Intent(context,SearchActivity::class.java))
+        }
 
         binding?.mainPlayer?.playBtn?.setOnClickListener { play() }
         binding?.mainPlayer?.pauseBtn?.setOnClickListener { pause() }
@@ -116,8 +124,6 @@ class HomeFragment :Fragment(), VoiceClick {
         binding!!.recyclerView.setHasFixedSize(true)
         voiceAdapter = VoiceAdapter(voiceList!!, requireContext(),this)
         binding!!.recyclerView.adapter = voiceAdapter
-        val dividerItemDecoration = DividerItemDecoration(binding!!.recyclerView.context, DividerItemDecoration.VERTICAL)
-        binding!!.recyclerView.addItemDecoration(dividerItemDecoration)
     }
 
 
@@ -129,8 +135,14 @@ class HomeFragment :Fragment(), VoiceClick {
             voiceList?.addAll(voices!!)
             voiceAdapter?.notifyDataSetChanged()
             pd.dismiss()
+            if (voiceList!!.size>0){
+                binding?.welcomeInfoLay?.visibility   = View.GONE
+            }else{
+                binding?.welcomeInfoLay?.visibility   = View.VISIBLE
+                pd.dismiss()
+
+            }
         }
-        pd.dismiss()
 
         firebaseViewModel.checkForFollowers(firebaseUser.uid)
     }
@@ -167,8 +179,7 @@ class HomeFragment :Fragment(), VoiceClick {
     private fun initializeSeekBar() {
         binding?.mainPlayer?.seekBar!!.max = mediaPlayer!!.seconds
 
-        runnable = Runnable {
-            binding?.mainPlayer?.seekBar?.progress = mediaPlayer!!.currentSeconds
+        runnable = Runnable {  binding?.mainPlayer?.seekBar?.progress = mediaPlayer!!.currentSeconds
 
 
             handler.postDelayed(runnable, 1000)
@@ -189,7 +200,7 @@ class HomeFragment :Fragment(), VoiceClick {
                     mediaPlayer!!.stop()
                     mediaPlayer!!.release()
                 }
-                mediaPlayer!!.start()
+                mediaPlayer?.start()
 
             }
             binding?.mainPlayer?.playBtn?.visibility = View.GONE
@@ -212,6 +223,7 @@ class HomeFragment :Fragment(), VoiceClick {
                 binding?.mainPlayer?.playBtn?.visibility = View.VISIBLE
                 binding?.mainPlayer?.pauseBtn?.visibility = View.GONE
             }
+
         }
 
     }
@@ -234,19 +246,30 @@ class HomeFragment :Fragment(), VoiceClick {
 
 
     override fun pickVoice(voice: Voice) {
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.Main).launch {
+            increaseViewedNumber(voice)
+            val pd = ProgressDialog(context,R.style.CustomDialog)
+            pd.setCancelable(false)
+            pd.show()
             mediaPlayer?.release()
             val voiceUri = voice.voiceUrl.toUri()
-            binding?.mainPlayer?.mainVoiceTitle?.text = voice.voiceTitle
-            mediaPlayer = MediaPlayer.create(context,voiceUri)
 
-            mediaPlayer?.setOnPreparedListener { mp ->
-                CoroutineScope(Dispatchers.Main).launch {
-                    mp.start()
-                    initializeSeekBar()
-                    binding?.mainPlayer?.playBtn?.visibility = View.GONE
-                    binding?.mainPlayer?.pauseBtn?.visibility = View.VISIBLE
-                    binding?.mainPlayer?.root?.visibility = View.VISIBLE
+            withContext(Dispatchers.IO) {
+                mediaPlayer = MediaPlayer().apply {
+                    setDataSource(requireContext(), voiceUri)
+                    setOnPreparedListener {
+                        // MediaPlayer hazır olduğunda yapılacak işlemler
+                        binding?.mainPlayer?.mainVoiceTitle?.text = voice.voiceTitle
+                        mediaPlayer!!.start()
+                        initializeSeekBar()
+                        binding?.mainPlayer?.playBtn?.visibility = View.GONE
+                        binding?.mainPlayer?.pauseBtn?.visibility = View.VISIBLE
+                        binding?.mainPlayer?.root?.visibility = View.VISIBLE
+                        pd.dismiss()
+
+                    }
+                    prepareAsync()
+
                 }
             }
         }
@@ -265,6 +288,8 @@ class HomeFragment :Fragment(), VoiceClick {
     }
 
     override fun clickUser(voice: Voice) {
+        destroyMedia()
+
         val intent = Intent(context, ProfileActivity::class.java)
         intent.putExtra("userId",voice.publisherId)
         startActivity(intent)

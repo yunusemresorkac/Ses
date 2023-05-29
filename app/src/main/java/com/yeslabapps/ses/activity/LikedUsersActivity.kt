@@ -32,6 +32,12 @@ class LikedUsersActivity : AppCompatActivity(),UserClick {
         binding = ActivityLikedUsersBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        binding.toolbar.setNavigationOnClickListener { finish() }
+
         firebaseUser = FirebaseAuth.getInstance().currentUser
         val voiceId = intent.getStringExtra("voiceIdForLikes")
 

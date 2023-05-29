@@ -1,30 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".activity.SearchActivity">
 
-    <EditText
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/searchUserEt"
-        android:background="@drawable/rect_border"
-        android:layout_margin="@dimen/_10sdp"
-        android:padding="@dimen/_6sdp"
-        android:hint="Search"
-        android:maxLines="1"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black"/>
+        android:id="@+id/toolbar"
+        android:background="@color/itemOrange"
+        tools:ignore="MissingConstraints"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabsSearch"
+        android:layout_width="@dimen/_200sdp"
+        app:tabTextColor="@color/black"
         android:layout_height="wrap_content"
-        android:id="@+id/recyclerView"
-        />
+        app:tabTextAppearance="@style/MineCustomTabText"
+        app:tabIndicatorColor="@color/black"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_600sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp" />
 
 
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

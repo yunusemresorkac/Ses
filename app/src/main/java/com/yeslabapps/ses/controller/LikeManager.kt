@@ -69,7 +69,10 @@ class LikeManager(postId: String, userId: String , private val listener: LikeSta
         map["countOfLikes"] = FieldValue.increment(1)
 
         FirebaseFirestore.getInstance().collection("Voices").document(voice.voiceId)
-            .update(map)
+            .update(map).addOnSuccessListener {
+                FirebaseFirestore.getInstance().collection("MyVoices").document(voice.publisherId).collection("Voices").document(voice.voiceId)
+                    .update(map)
+            }
     }
 
     private fun decreaseLikeCount(voice: Voice){
@@ -77,7 +80,10 @@ class LikeManager(postId: String, userId: String , private val listener: LikeSta
         map["countOfLikes"] = FieldValue.increment(-1)
 
         FirebaseFirestore.getInstance().collection("Voices").document(voice.voiceId)
-            .update(map)
+            .update(map).addOnSuccessListener {
+                FirebaseFirestore.getInstance().collection("MyVoices").document(voice.publisherId).collection("Voices").document(voice.voiceId)
+                    .update(map)
+            }
     }
 
     fun getLikesCountForVoice(postId: String): Task<Int> {

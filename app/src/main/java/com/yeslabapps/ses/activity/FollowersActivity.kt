@@ -18,6 +18,8 @@ import com.yeslabapps.ses.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class FollowersActivity : AppCompatActivity(), UserClick {
 
@@ -34,10 +36,15 @@ class FollowersActivity : AppCompatActivity(), UserClick {
         binding = ActivityFollowersBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        binding.toolbar.setNavigationOnClickListener { finish() }
+
+
         userId = intent.getStringExtra("followersId")
 
         firebaseUser = FirebaseAuth.getInstance().currentUser
-        idlist = ArrayList()
 
         initRecycler()
 
@@ -56,45 +63,67 @@ class FollowersActivity : AppCompatActivity(), UserClick {
     }
 
 
-
     private fun getFollowers(userId: String) {
-        val followersCollection = FirebaseFirestore.getInstance().collection("Users").
-        document(userId).collection("Followers")
+        val followersCollection = FirebaseFirestore.getInstance()
+            .collection("Users")
+            .document(userId)
+            .collection("Followers")
 
-        followersCollection.get().addOnSuccessListener { querySnapshot ->
-            for (document in querySnapshot.documents) {
-                val followerId = document.id
-                idlist?.add(followerId)
-                println("Kullanıcı $followerId, $userId kullanıcısını takip ediyor.")
-            }
-            showFollowers()
-        }
-    }
-
-
-    private fun showFollowers(){
         CoroutineScope(Dispatchers.IO).launch {
-            FirebaseFirestore.getInstance().collection("Users").get()
-                .addOnSuccessListener { queryDocumentSnapshots: QuerySnapshot ->
-                    if (!queryDocumentSnapshots.isEmpty) {
-                        val list = queryDocumentSnapshots.documents
-                        for (d in list) {
-                            val user: User? = d.toObject(User::class.java)
-                            if (user != null) {
-                                for (id in idlist!!) {
-                                    if (user.userId.equals(id)) {
-                                        userList?.add(user)
+            try {
+                val querySnapshot = withContext(Dispatchers.IO) {
+                    followersCollection.get().await()
+                }
 
-                                    }
-                                }
-                            }
-                        }
-                        userAdapter?.notifyDataSetChanged();
+                val followerIds = mutableListOf<String>()
 
-                    }
-                }.addOnFailureListener { }
+                for (document in querySnapshot.documents) {
+                    val followerId = document.id
+                    followerIds.add(followerId)
+                    println("Kullanıcı $followerId, $userId kullanıcısını takip ediyor.")
+                }
+
+                withContext(Dispatchers.Main) {
+                    showFollowers(followerIds)
+                }
+            } catch (e: Exception) {
+                // Hata durumunda yapılacak işlemler
+            }
         }
     }
+
+    private fun showFollowers(followerIds: List<String>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val querySnapshot = withContext(Dispatchers.IO) {
+                    FirebaseFirestore.getInstance()
+                        .collection("Users")
+                        .whereIn("userId", followerIds)
+                        .get()
+                        .await()
+                }
+
+                for (document in querySnapshot.documents) {
+                    val user: User? = document.toObject(User::class.java)
+                    user?.let {
+                        userList?.add(user)
+                    }
+                }
+
+                withContext(Dispatchers.Main) {
+                    // User listesini kullanarak gerekli işlemleri yapabilirsiniz
+                    // Örneğin, RecyclerView güncellemesi veya verilerin gösterimi
+                    userAdapter?.notifyDataSetChanged();
+
+                }
+            } catch (e: Exception) {
+                // Hata durumunda yapılacak işlemler
+            }
+        }
+    }
+
+
+
 
     override fun followUser(user: User) {
         FollowManager().followUser(firebaseUser!!.uid,user.userId)

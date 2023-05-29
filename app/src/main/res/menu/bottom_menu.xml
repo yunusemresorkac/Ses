@@ -15,4 +15,10 @@
     <item android:id="@+id/navProfile"
         android:icon="@drawable/ic_person_black_24dp"
         android:title="Profile"/>
+
+    <item android:id="@+id/navOptions"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="Options"/>
+
+
 </menu>

@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.yeslabapps.ses.R
 import com.yeslabapps.ses.activity.StartActivity
 import com.yeslabapps.ses.model.User
 
@@ -16,7 +17,7 @@ class LoginActivityRepo {
     private val errorMessage: MutableLiveData<String> = MutableLiveData()
 
     fun loginUser(context: Activity, email: String?, password: String?, auth: FirebaseAuth) {
-        val pd = ProgressDialog(context)
+        val pd = ProgressDialog(context, R.style.CustomDialog)
         pd.setCanceledOnTouchOutside(false)
         pd.show()
         auth.signInWithEmailAndPassword(email!!, password!!)
@@ -36,7 +37,7 @@ class LoginActivityRepo {
     }
 
     fun createUser(deviceId: String?, context: Activity, username: String, email: String, password: String, userId :String, country : String ,bio :String ,firstName : String,lastName :String) {
-        val pd = ProgressDialog(context)
+        val pd = ProgressDialog(context, R.style.CustomDialog)
         pd.setCanceledOnTouchOutside(false)
         pd.show()
         if (deviceId != null) {
@@ -47,7 +48,8 @@ class LoginActivityRepo {
                     if (task.result.isEmpty){
 
                         val user = User(username,
-                            userId, email, System.currentTimeMillis(), country,bio,firstName,lastName,"","",0)
+                            userId, email, System.currentTimeMillis(), country,bio,firstName,lastName
+                            ,"","",0)
 
                         FirebaseFirestore.getInstance().collection("Users").document(userId)
                             .set(user).addOnSuccessListener {

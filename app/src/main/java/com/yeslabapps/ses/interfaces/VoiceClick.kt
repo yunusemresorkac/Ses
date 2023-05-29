@@ -9,7 +9,9 @@ interface VoiceClick {
 
     fun seeLikers(voice: Voice)
 
-    fun clickUser(voice : Voice)
+    fun clickUser(voice : Voice){
+
+    }
 
     fun voiceActions(voice: Voice){
 

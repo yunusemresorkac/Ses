@@ -27,6 +27,10 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
 
     }
 
+    fun getVoicesByCountry(relatedCountry : String){
+        repo.getVoicesByCountry(relatedCountry)
+    }
+
     fun getUserInfo(userId: String?, binding: FragmentProfileBinding){
         repo.getUserInfo(userId, binding)
     }
@@ -38,6 +42,9 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
         repo.getMyVoices(userId)
     }
 
+    fun getUserCountry(userId: String, callback: (String) -> Unit){
+        return repo.getUserCountry(userId,callback)
+    }
 
 
     fun getAllVoices():MutableLiveData<List<Voice>?>{

@@ -6,12 +6,15 @@ import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.text.format.DateUtils
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import com.yeslabapps.ses.model.Voice
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -103,6 +106,19 @@ class DummyMethods {
                 "kMGTPE"[exp - 1]
             )
         }
+
+
+         fun increaseViewedNumber(voice: Voice){
+            val map: HashMap<String, Any> = HashMap()
+            map["listened"] = FieldValue.increment(1)
+
+            FirebaseFirestore.getInstance().collection("Voices").document(voice.voiceId)
+                .update(map).addOnSuccessListener {
+                    FirebaseFirestore.getInstance().collection("MyVoices").document(voice.publisherId).collection("Voices").document(voice.voiceId)
+                        .set(map)
+                }
+        }
+
 
 
     }
