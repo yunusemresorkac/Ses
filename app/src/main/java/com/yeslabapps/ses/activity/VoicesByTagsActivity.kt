@@ -2,7 +2,9 @@ package com.yeslabapps.ses.activity
 
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.IntentFilter
 import android.media.MediaPlayer
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -16,6 +18,7 @@ import com.yeslabapps.ses.adapter.VoiceAdapter
 import com.yeslabapps.ses.databinding.ActivityVoicesByTagsBinding
 import com.yeslabapps.ses.interfaces.VoiceClick
 import com.yeslabapps.ses.model.Voice
+import com.yeslabapps.ses.util.NetworkChangeListener
 import com.yeslabapps.ses.viewmodel.FirebaseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +37,7 @@ class VoicesByTagsActivity : AppCompatActivity(), VoiceClick {
     private var pause:Boolean = false
     private lateinit var runnable:Runnable
     private var handler: Handler = Handler()
+    private val networkChangeListener = NetworkChangeListener()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -238,6 +242,15 @@ class VoicesByTagsActivity : AppCompatActivity(), VoiceClick {
 
     }
 
+    override fun onStart() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
 
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
+    }
 
 }

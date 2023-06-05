@@ -11,8 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?selectableItemBackground"
-
+        android:foreground="?android:selectableItemBackground"
         android:padding="@dimen/_4sdp">
 
 
@@ -20,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="@color/black"
+            android:textColor="?android:textColorPrimary"
             android:id="@+id/voiceTitle"
             android:textStyle="bold"
             android:fontFamily="@font/montserrat"
@@ -70,11 +69,10 @@
                 android:layout_height="@dimen/_24sdp"
                 android:src="@drawable/ic_more_vert"
                 android:layout_marginTop="@dimen/_2sdp"
-
                 android:layout_alignParentEnd="true"
                 android:id="@+id/voiceActions"
-                android:background="?selectableItemBackgroundBorderless"/>
-
+                android:background="?selectableItemBackgroundBorderless"
+                app:tint="?android:textColorPrimary" />
 
 
 
@@ -93,7 +91,8 @@
                 android:layout_height="@dimen/_24sdp"
                 android:src="@drawable/time_svgrepo_com"
                 android:layout_marginTop="@dimen/_7sdp"
-                android:id="@+id/timeImage"/>
+                android:id="@+id/timeImage"
+                app:tint="?android:textColorPrimary" />
 
 
             <TextView
@@ -106,7 +105,8 @@
                 android:text=""
                 android:textSize="13sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"/>
+                android:textColor="?android:textColorPrimary"
+                />
 
         </LinearLayout>
 
@@ -135,9 +135,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/publishTime"
-                android:text="asffas"
+                android:text=""
                 android:layout_gravity="end"
-                android:textColor="@color/black"
+                android:textColor="?android:textColorPrimary"
                 android:fontFamily="@font/montserrat"
                 android:layout_marginEnd="@dimen/_1sdp"/>
 

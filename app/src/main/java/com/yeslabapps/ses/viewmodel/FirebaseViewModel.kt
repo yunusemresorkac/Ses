@@ -5,7 +5,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 
-import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.DocumentSnapshot
 import com.yeslabapps.ses.databinding.ActivityProfileBinding
 import com.yeslabapps.ses.databinding.FragmentProfileBinding
 import com.yeslabapps.ses.model.Voice
@@ -31,11 +31,19 @@ class FirebaseViewModel(application: Application) : AndroidViewModel(application
         repo.getVoicesByCountry(relatedCountry)
     }
 
+    fun getVoicesByCountryMostListened(relatedCountry: String){
+        repo.getVoicesByCountryMostListened(relatedCountry)
+    }
+
+    fun getVoicesByCountryMostLiked(relatedCountry: String){
+        repo.getVoicesByCountryMostLiked(relatedCountry)
+    }
+
     fun getUserInfo(userId: String?, binding: FragmentProfileBinding){
         repo.getUserInfo(userId, binding)
     }
-    fun getUserInfoForActivity(userId: String?, binding: ActivityProfileBinding){
-        repo.getUserInfoForActivity(userId, binding)
+    fun getUserInfoForActivity(myId : String, userId: String, binding: ActivityProfileBinding){
+        repo.getUserInfoForActivity(myId,userId, binding)
     }
 
     fun getMyVoices(userId: String){

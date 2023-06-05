@@ -1,14 +1,11 @@
-<resources>
-    <!-- Base application theme.-->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/itemOrange</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-
     </style>
-
 
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
@@ -18,6 +15,7 @@
 
     <style name="MineCustomTabText" parent="Widget.Design.TabLayout">
         <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/montserrat</item>
 
     </style>
 
@@ -95,10 +93,11 @@
         <item name="android:windowIsFloating">true</item>
     </style>
 
-    <style name="BottomNavigationTheme" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="colorPrimary">@color/appOrange</item>
+    <style name="BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView" >
+        <item name="android:background">@drawable/main_bg</item>
+        <item name="itemIconTint">@color/white</item>
+        <item name="itemTextColor">@color/white</item>
     </style>
-
 
 
 

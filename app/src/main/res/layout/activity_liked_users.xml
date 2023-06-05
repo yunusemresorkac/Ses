@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/toolbar"
         android:backgroundTint="@color/itemOrange"
-        android:background="@drawable/login_bg">
+        android:background="@drawable/toolbar_bg">
 
         <TextView
             android:layout_width="wrap_content"

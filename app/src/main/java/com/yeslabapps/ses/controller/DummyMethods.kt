@@ -2,6 +2,7 @@ package com.yeslabapps.ses.controller
 
 import android.Manifest
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.net.Uri
@@ -14,7 +15,9 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import com.yeslabapps.ses.R
 import com.yeslabapps.ses.model.Voice
+import org.aviran.cookiebar2.CookieBar
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -115,9 +118,18 @@ class DummyMethods {
             FirebaseFirestore.getInstance().collection("Voices").document(voice.voiceId)
                 .update(map).addOnSuccessListener {
                     FirebaseFirestore.getInstance().collection("MyVoices").document(voice.publisherId).collection("Voices").document(voice.voiceId)
-                        .set(map)
+                        .update(map)
                 }
         }
+
+
+        fun showCookie(context: Context,title : String,message : String){
+            CookieBar.build(context as Activity?)
+                .setTitle(title)
+                .setMessage(message)
+                .show()
+        }
+
 
 
 

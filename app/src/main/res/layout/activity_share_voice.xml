@@ -4,41 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/main_bg"
     android:orientation="vertical"
     tools:context=".activity.ShareVoiceActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/toolbar"
-        android:backgroundTint="@color/itemOrange"
-        android:background="@drawable/login_bg">
+        android:id="@+id/toolbar">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Share Voice"
+            android:text="@string/share_voice"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:fontFamily="@font/montserrat"/>
 
     </androidx.appcompat.widget.Toolbar>
 
 
-
     <EditText
+        android:id="@+id/voiceTitleEt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_10sdp"
-        android:background="@drawable/rect_border"
-        android:padding="@dimen/_10sdp"
-        android:hint="Title"
-        android:textColorHint="@color/black"
         android:layout_below="@id/toolbar"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="@drawable/rect_border"
+        android:hint="@string/title"
         android:maxLength="40"
-        android:textColor="@color/black"
-        android:id="@+id/voiceTitleEt"/>
+        android:padding="@dimen/_10sdp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
+
+    <TextView
+        android:id="@+id/characterCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:text=""
+        android:layout_below="@id/voiceTitleEt"
+        android:textColor="@color/white" />
 
     <EditText
         android:layout_width="match_parent"
@@ -46,12 +56,12 @@
         android:layout_margin="@dimen/_10sdp"
         android:background="@drawable/rect_border"
         android:maxLines="1"
-        android:layout_below="@id/voiceTitleEt"
+        android:layout_below="@id/characterCount"
         android:padding="@dimen/_10sdp"
         android:hint="Tags"
-        android:textColorHint="@color/black"
+        android:textColorHint="@color/white"
         android:maxLength="15"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:id="@+id/tagsEt"/>
 
     <LinearLayout
@@ -87,14 +97,15 @@
             android:visibility="gone"
             android:src="@drawable/pause_square_svgrepo_com"
             android:layout_margin="@dimen/_5sdp"
-            />
+            app:tint="@color/white" />
 
         <ImageView
             android:id="@+id/playBtn"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
             android:layout_margin="@dimen/_5sdp"
-            android:src="@drawable/play_square_svgrepo_com"/>
+            android:src="@drawable/play_square_svgrepo_com"
+            app:tint="@color/white" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -104,17 +115,17 @@
 
             <TextView
                 android:id="@+id/tv_pass"
-                android:text="00"
+                android:text=""
                 android:textSize="12sp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/tv_due"
-                android:text="120"
+                android:text=""
                 android:textSize="12sp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"

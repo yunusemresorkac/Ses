@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:id="@+id/searchUserEtLay"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="@dimen/_10sdp"
         android:layout_height="wrap_content">
 
@@ -17,32 +18,47 @@
             android:layout_height="wrap_content"
             android:id="@+id/searchEt"
             android:background="@drawable/rect_border"
-            android:hint="Search"
+            android:hint="@string/search"
             android:fontFamily="@font/montserrat"
             android:padding="@dimen/_8sdp"
             android:drawableStart="@drawable/ic_baseline_search_24"
             android:textSize="14sp"
-            android:textColorHint="@color/black"
-            android:textColor="@color/black"
+            android:drawableTint="?android:textColorPrimary"
+            android:textColorHint="?android:textColorPrimary"
+            android:textColor="?android:textColorPrimary"
             />
 
 
     </LinearLayout>
 
 
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mainPlayer">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
 
-    <androidx.recyclerview.widget.RecyclerView
+    </LinearLayout>
 
 
+    <include
+        layout="@layout/main_voice_player"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/searchUserEtLay"
-        android:id="@+id/recyclerView">
+        android:layout_margin="@dimen/_5sdp"
+        android:id="@+id/mainPlayer"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/searchUserEtLay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content"/>
 
-    </androidx.recyclerview.widget.RecyclerView>
 
-
-
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

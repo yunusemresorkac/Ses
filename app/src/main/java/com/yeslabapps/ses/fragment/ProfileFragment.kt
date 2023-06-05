@@ -2,10 +2,8 @@ package com.yeslabapps.ses.fragment
 
 import android.app.Dialog
 import android.app.ProgressDialog
-import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
@@ -14,15 +12,17 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yeslabapps.ses.R
-import com.yeslabapps.ses.activity.*
+import com.yeslabapps.ses.activity.FollowersActivity
+import com.yeslabapps.ses.activity.FollowingActivity
+import com.yeslabapps.ses.activity.LikedUsersActivity
 import com.yeslabapps.ses.adapter.VoiceAdapter
 import com.yeslabapps.ses.controller.DummyMethods
 import com.yeslabapps.ses.controller.FollowManager
@@ -35,6 +35,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class ProfileFragment: Fragment(),VoiceClick {
 
@@ -50,7 +51,7 @@ class ProfileFragment: Fragment(),VoiceClick {
 
     private  var mediaPlayerProfile : MediaPlayer? = null
 
-
+    private lateinit var progressDialog : ProgressDialog
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -64,7 +65,9 @@ class ProfileFragment: Fragment(),VoiceClick {
 
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
-
+        progressDialog = ProgressDialog(context,R.style.CustomDialog)
+        progressDialog.setCancelable(false)
+        progressDialog.show()
 
 
         initRecycler()
@@ -81,8 +84,14 @@ class ProfileFragment: Fragment(),VoiceClick {
 
 
 
-        binding?.followers?.setOnClickListener { startActivity(Intent(context,FollowersActivity::class.java).putExtra("followersId",firebaseUser.uid)) }
-        binding?.followings?.setOnClickListener { startActivity(Intent(context,FollowingActivity::class.java).putExtra("followingId",firebaseUser.uid)) }
+        binding?.followers?.setOnClickListener {
+            startActivity(Intent(context,FollowersActivity::class.java).putExtra("followersId",firebaseUser.uid))
+            destroyMedia()
+        }
+        binding?.followings?.setOnClickListener {
+            startActivity(Intent(context,FollowingActivity::class.java).putExtra("followingId",firebaseUser.uid))
+            destroyMedia()
+        }
 
         binding?.mainPlayer?.seekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
@@ -109,18 +118,16 @@ class ProfileFragment: Fragment(),VoiceClick {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (dy > 0 && bottomMenu.visibility == View.VISIBLE) {
-                    bottomMenu.visibility = View.GONE
-                    if (voiceList?.size!! >8){
-                        binding!!.followLay.visibility = View.GONE
+
+
+                if (dy > 0 && bottomMenu.visibility == View.VISIBLE ) {
+                    if (voiceList?.size!! >4){
+                        bottomMenu.visibility = View.GONE
 
 
                     }
                 } else if (dy < 0 && bottomMenu.visibility != View.VISIBLE) {
                     bottomMenu.visibility = View.VISIBLE
-                    binding!!.followLay.visibility = View.VISIBLE
-
-
 
                 }
             }
@@ -153,23 +160,28 @@ class ProfileFragment: Fragment(),VoiceClick {
     }
 
 
+
     private fun getMyVoices() {
         viewModel.getAllVoices().observe(viewLifecycleOwner) { voices ->
-
+            progressDialog.dismiss()
             voiceList?.addAll(voices!!)
             voiceAdapter?.notifyDataSetChanged()
+
             if (voiceList?.size!! >0){
                 binding?.totalVoices?.text = " Voices \n${voiceList?.size}"
             }else{
                 binding?.totalVoices?.text = " Voices \n0"
             }
         }
+
         viewModel.getMyVoices(firebaseUser.uid)
         if (voiceList?.size!! >0){
             binding?.totalVoices?.text = " Voices \n${voiceList?.size}"
         }else{
             binding?.totalVoices?.text = " Voices \n0"
         }
+        progressDialog.dismiss()
+
 
     }
 
@@ -273,10 +285,11 @@ class ProfileFragment: Fragment(),VoiceClick {
     override fun pickVoice(voice: Voice) {
         CoroutineScope(Dispatchers.Main).launch {
             DummyMethods.increaseViewedNumber(voice)
+            val pd = ProgressDialog(context, R.style.CustomDialog).apply {
+                setCancelable(false)
+                show()
+            }
 
-            val pd = ProgressDialog(context,R.style.CustomDialog)
-            pd.setCancelable(false)
-            pd.show()
             mediaPlayer?.release()
             val voiceUri = voice.voiceUrl.toUri()
 
@@ -284,18 +297,17 @@ class ProfileFragment: Fragment(),VoiceClick {
                 mediaPlayer = MediaPlayer().apply {
                     setDataSource(requireContext(), voiceUri)
                     setOnPreparedListener {
-                        // MediaPlayer hazır olduğunda yapılacak işlemler
-                        binding?.mainPlayer?.mainVoiceTitle?.text = voice.voiceTitle
+                        binding?.mainPlayer?.apply {
+                            mainVoiceTitle.text = voice.voiceTitle
+                            playBtn.visibility = View.GONE
+                            pauseBtn.visibility = View.VISIBLE
+                            root.visibility = View.VISIBLE
+                        }
                         mediaPlayer!!.start()
                         initializeSeekBar()
-                        binding?.mainPlayer?.playBtn?.visibility = View.GONE
-                        binding?.mainPlayer?.pauseBtn?.visibility = View.VISIBLE
-                        binding?.mainPlayer?.root?.visibility = View.VISIBLE
                         pd.dismiss()
-
                     }
                     prepareAsync()
-
                 }
             }
         }
@@ -325,26 +337,34 @@ class ProfileFragment: Fragment(),VoiceClick {
     }
 
     private fun showVoiceActions(voice: Voice){
-        val dialog = Dialog(requireContext())
+        val dialog = Dialog(requireContext(),R.style.SheetDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.profile_voice_actions)
+
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog.window?.setGravity(Gravity.BOTTOM)
-        dialog.window?.setBackgroundDrawableResource(R.color.white)
         dialog.show()
 
         val deleteVoice = dialog.findViewById<CardView>(R.id.deleteVoice)
         val shareVoice = dialog.findViewById<CardView>(R.id.shareVoice)
+        val downloadVoice = dialog.findViewById<CardView>(R.id.downloadVoice)
 
-        shareVoice.setOnClickListener {  shareVoice(voice.voiceUrl.toUri(),requireContext())}
+
+        downloadVoice.setOnClickListener {
+            if (DummyMethods.validatePermission(requireContext())){
+                dialog.dismiss()
+                com.yeslabapps.ses.controller.DownloadManager.downloadVoice(requireContext(),voice.voiceUrl,voice.voiceTitle)
+            }
+
+        }
 
         deleteVoice.setOnClickListener {
             deleteVoice(voice)
             dialog.dismiss()
         }
 
-    }
 
+    }
 
     private fun deleteVoice(voice: Voice){
         FirebaseFirestore.getInstance().collection("Voices").document(voice.voiceId)
@@ -357,12 +377,6 @@ class ProfileFragment: Fragment(),VoiceClick {
     }
 
 
-    private fun shareVoice(fileUri: Uri, context: Context) {
-        val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.type = "audio/*"
-        shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri)
-        context.startActivity(shareIntent)
-    }
 
     private fun destroyMedia(){
         binding?.mainPlayer?.seekBar?.progress = 0
@@ -393,6 +407,7 @@ class ProfileFragment: Fragment(),VoiceClick {
 
 
     }
+
 
 
 

@@ -8,16 +8,16 @@
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/main_bg"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/toolbar"
-        android:backgroundTint="@color/itemOrange"
-        android:background="@drawable/login_bg">
+        >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/home"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textStyle="bold"
             android:fontFamily="@font/montserrat"
             android:textSize="18sp"/>
@@ -30,11 +30,10 @@
             android:id="@+id/goSearch"
             android:background="?selectableItemBackgroundBorderless"
             android:src="@drawable/search_svgrepo_com"
-            android:textColor="@color/black"
+
             android:layout_marginEnd="@dimen/_5sdp"
             android:textStyle="bold"
-            android:fontFamily="@font/montserrat"
-            android:textSize="16sp"/>
+            app:tint="@color/white" />
 
     </androidx.appcompat.widget.Toolbar>
 

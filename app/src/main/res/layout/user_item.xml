@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/itemOrange"
+        android:background="@drawable/main_bg"
         android:padding="@dimen/_4sdp">
 
 
@@ -25,7 +25,7 @@
             android:textStyle="bold"
             android:layout_marginTop="@dimen/_5sdp"
             android:text=""
-            android:textColor="@color/black"/>
+            android:textColor="@color/white"/>
 
 
         <ImageView
@@ -38,7 +38,7 @@
             android:layout_marginTop="@dimen/_5sdp"
             android:layout_marginEnd="@dimen/_5sdp"
             android:layout_marginBottom="@dimen/_5sdp"
-            app:tint="@color/black" />
+            app:tint="@color/white" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
             android:text=""
             android:layout_centerInParent="true"
             android:layout_marginEnd="@dimen/_2sdp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:fontFamily="@font/montserrat"/>
 
     </RelativeLayout>

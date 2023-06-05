@@ -1,6 +1,8 @@
 package com.yeslabapps.ses.activity
 
 import android.annotation.SuppressLint
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -16,6 +18,7 @@ import com.yeslabapps.ses.databinding.ActivitySearchBinding
 import com.yeslabapps.ses.fragment.SearchUserFragment
 import com.yeslabapps.ses.fragment.SearchVoiceFragmentByTag
 import com.yeslabapps.ses.fragment.SearchVoiceFragmentByTitle
+import com.yeslabapps.ses.util.NetworkChangeListener
 import kotlinx.android.synthetic.main.activity_search.*
 import java.util.*
 
@@ -23,6 +26,7 @@ import java.util.*
 class SearchActivity : AppCompatActivity(){
 
     private lateinit var binding: ActivitySearchBinding
+    private val networkChangeListener = NetworkChangeListener()
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,5 +78,15 @@ class SearchActivity : AppCompatActivity(){
         }
     }
 
+    override fun onStart() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
+    }
 
 }

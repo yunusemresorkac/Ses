@@ -4,20 +4,20 @@ import android.app.Activity
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.storage.FirebaseStorage
 import com.yeslabapps.ses.R
 import com.yeslabapps.ses.controller.DummyMethods
@@ -27,8 +27,7 @@ import com.yeslabapps.ses.fragment.HomeFragment
 import com.yeslabapps.ses.fragment.OptionsFragment
 import com.yeslabapps.ses.fragment.ProfileFragment
 import com.yeslabapps.ses.util.Constants
-import java.text.SimpleDateFormat
-import java.util.*
+import com.yeslabapps.ses.util.NetworkChangeListener
 
 
 class StartActivity : AppCompatActivity() {
@@ -37,6 +36,7 @@ class StartActivity : AppCompatActivity() {
     private var selectorFragment: Fragment? = null
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()
     private var firebaseUser : FirebaseUser? = null
+    private val networkChangeListener = NetworkChangeListener()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,13 @@ class StartActivity : AppCompatActivity() {
         binding = ActivityStartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         firebaseUser = FirebaseAuth.getInstance().currentUser
+        val settings = FirebaseFirestoreSettings.Builder()
+            .setPersistenceEnabled(true)
+            .build()
+        FirebaseFirestore.getInstance().firestoreSettings = settings
+
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().replace(
@@ -52,7 +58,6 @@ class StartActivity : AppCompatActivity() {
                 HomeFragment()
             ).commit()
         }
-        binding.bottom.itemIconTintList = null
         binding.bottom.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navHome -> selectorFragment = HomeFragment()
@@ -74,13 +79,14 @@ class StartActivity : AppCompatActivity() {
     }
 
     private fun showAddDialog() {
-        val dialog = Dialog(this)
+        val dialog = Dialog(this,R.style.SheetDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.bottom_add)
+
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog.window?.setGravity(Gravity.BOTTOM)
-        dialog.window?.setBackgroundDrawableResource(R.color.white)
         dialog.show()
+
 
         val addVoice = dialog.findViewById<CardView>(R.id.addNewVoice)
         val addProfileVoice = dialog.findViewById<CardView>(R.id.addProfileVoice)
@@ -120,7 +126,8 @@ class StartActivity : AppCompatActivity() {
             }
             else{
                 recreate()
-                Toast.makeText(this,"en fazla 30 sn pls", Toast.LENGTH_SHORT).show()
+                DummyMethods.showCookie(this,"Maximum 30 seconds!","")
+
             }
         }
 
@@ -162,6 +169,19 @@ class StartActivity : AppCompatActivity() {
                 progressDialog.setMessage("Yüklendi: $currentProgress%")
             }
     }
+
+
+    override fun onStart() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
+    }
+
 
 
 }

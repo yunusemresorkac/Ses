@@ -3,6 +3,8 @@ package com.yeslabapps.ses.activity
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
@@ -12,8 +14,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yeslabapps.ses.R
+import com.yeslabapps.ses.controller.DummyMethods
 import com.yeslabapps.ses.databinding.ActivityLoginBinding
 import com.yeslabapps.ses.model.User
+import com.yeslabapps.ses.util.NetworkChangeListener
 import com.yeslabapps.ses.viewmodel.LoginActivityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -29,6 +33,9 @@ class LoginActivity : AppCompatActivity() {
     private var countryList: MutableList<String>? = null
 
     private lateinit var countryName : String
+
+    private val networkChangeListener = NetworkChangeListener()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -286,18 +293,24 @@ class LoginActivity : AppCompatActivity() {
         if (binding.emailLogin.text.toString().trim().isNotEmpty() && binding.passwordLogin.text.toString()
                 .trim().isNotEmpty()
         ) {
+
+
             viewModel.loginUser(
                 this@LoginActivity,
                 binding.emailLogin.text.toString().trim(),
                 binding.passwordLogin.text.toString().trim(),
                 firebaseAuth
             )
+
+
         }
     }
 
     @SuppressLint("HardwareIds")
     private fun register() {
-
+        val pd = ProgressDialog(this@LoginActivity,R.style.CustomDialog)
+        pd.setCancelable(false)
+        pd.show()
 
         val deviceId: String = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
         val collectionRef = FirebaseFirestore.getInstance().collection("Users")
@@ -311,16 +324,18 @@ class LoginActivity : AppCompatActivity() {
                         val userId = firebaseAuth.currentUser!!.uid
 
                         val user = User(binding.usernameRegister.text.toString().trim(),userId, binding.emailRegister.text.toString().trim(),
-                            System.currentTimeMillis(), countryName,"",binding.firstNameRegister.text.toString().trim(),binding.lastNameRegister.text.toString().trim(),deviceId)
+                            System.currentTimeMillis(), countryName,"",
+                            binding.firstNameRegister.text.toString().trim(),
+                            binding.lastNameRegister.text.toString().trim(),deviceId,"",0,false)
 
 
                         FirebaseFirestore.getInstance().collection("Users").document(userId)
                             .set(user).addOnSuccessListener {
 
-                                val intent = Intent(this, StartActivity::class.java)
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                startActivity(intent)
+                                pd.dismiss()
+                                sendEmailVerification()
                             }.addOnFailureListener {
+                                pd.dismiss()
                                 Toast.makeText(
                                     this,
                                     "Something went wrong.",
@@ -331,6 +346,9 @@ class LoginActivity : AppCompatActivity() {
                     }
 
 
+                }else{
+                    pd.dismiss()
+                    DummyMethods.showCookie(this,"This username already taken","")
                 }
             }
         }
@@ -343,6 +361,39 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+    private fun sendEmailVerification() {
+        val user = firebaseAuth.currentUser
+        user!!.sendEmailVerification().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                binding.loginLayout.visibility = View.VISIBLE
+                binding.registerLayout.visibility = View.GONE
+                val email = binding.emailRegister.text.toString().trim()
+                val pass  = binding.passwordRegister.text.toString().trim()
+                binding.emailLogin.setText(email)
+                binding.passwordLogin.setText(pass)
+                DummyMethods.showCookie(this@LoginActivity,"Verification email sent to " + user.email,"")
+
+
+            } else {
+                Toast.makeText(this@LoginActivity, "Failed to send verification email.", Toast.LENGTH_SHORT).show()
+
+            }
+
+
+        }
+    }
+
+
+    override fun onStart() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
+    }
 
 
 }

@@ -18,12 +18,14 @@
             android:id="@+id/searchEt"
             android:background="@drawable/rect_border"
             android:hint="Search"
+            android:maxLines="1"
+            android:drawableTint="?android:textColorPrimary"
             android:drawableStart="@drawable/ic_baseline_search_24"
             android:fontFamily="@font/montserrat"
             android:padding="@dimen/_8sdp"
             android:textSize="14sp"
-            android:textColorHint="@color/black"
-            android:textColor="@color/black"
+            android:textColorHint="?android:textColorPrimary"
+            android:textColor="?android:textColorPrimary"
             />
 
 

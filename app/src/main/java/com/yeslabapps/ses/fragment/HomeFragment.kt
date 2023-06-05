@@ -248,9 +248,11 @@ class HomeFragment :Fragment(), VoiceClick {
     override fun pickVoice(voice: Voice) {
         CoroutineScope(Dispatchers.Main).launch {
             increaseViewedNumber(voice)
-            val pd = ProgressDialog(context,R.style.CustomDialog)
-            pd.setCancelable(false)
-            pd.show()
+            val pd = ProgressDialog(context, R.style.CustomDialog).apply {
+                setCancelable(false)
+                show()
+            }
+
             mediaPlayer?.release()
             val voiceUri = voice.voiceUrl.toUri()
 
@@ -258,23 +260,20 @@ class HomeFragment :Fragment(), VoiceClick {
                 mediaPlayer = MediaPlayer().apply {
                     setDataSource(requireContext(), voiceUri)
                     setOnPreparedListener {
-                        // MediaPlayer hazır olduğunda yapılacak işlemler
-                        binding?.mainPlayer?.mainVoiceTitle?.text = voice.voiceTitle
+                        binding?.mainPlayer?.apply {
+                            mainVoiceTitle.text = voice.voiceTitle
+                            playBtn.visibility = View.GONE
+                            pauseBtn.visibility = View.VISIBLE
+                            root.visibility = View.VISIBLE
+                        }
                         mediaPlayer!!.start()
                         initializeSeekBar()
-                        binding?.mainPlayer?.playBtn?.visibility = View.GONE
-                        binding?.mainPlayer?.pauseBtn?.visibility = View.VISIBLE
-                        binding?.mainPlayer?.root?.visibility = View.VISIBLE
                         pd.dismiss()
-
                     }
                     prepareAsync()
-
                 }
             }
         }
-
-
 
 
     }

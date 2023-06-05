@@ -21,7 +21,14 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activity.AddActivity"
+            android:name=".activity.LoginActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.EditProfileActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -98,7 +105,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.OpeningActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -33,6 +33,8 @@ class FollowManager {
         }
     }
 
+
+
     // Kullanıcıyı takip etme fonksiyonu
     fun followUser(userId: String, targetUserId: String) {
         val userFollowersCollection = usersCollection.document(targetUserId).collection("Followers")

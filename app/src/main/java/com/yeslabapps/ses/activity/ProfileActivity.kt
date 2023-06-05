@@ -2,7 +2,9 @@ package com.yeslabapps.ses.activity
 
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.IntentFilter
 import android.media.MediaPlayer
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -22,6 +24,7 @@ import com.yeslabapps.ses.controller.FollowManager
 import com.yeslabapps.ses.databinding.ActivityProfileBinding
 import com.yeslabapps.ses.interfaces.VoiceClick
 import com.yeslabapps.ses.model.Voice
+import com.yeslabapps.ses.util.NetworkChangeListener
 import com.yeslabapps.ses.viewmodel.FirebaseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,11 +48,21 @@ class ProfileActivity : AppCompatActivity(), VoiceClick {
 
     private  var mediaPlayerProfile : MediaPlayer? = null
 
+    private lateinit var pd : ProgressDialog
+    private val networkChangeListener = NetworkChangeListener()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+
+        pd = ProgressDialog(this, R.style.CustomDialog)
+        pd.show()
+        pd.setCancelable(false)
 
 
         setSupportActionBar(binding.toolbar)
@@ -105,12 +118,10 @@ class ProfileActivity : AppCompatActivity(), VoiceClick {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (dy > 0 ) {
-                    if (voiceList?.size!! >4){
-                        binding.followLay.visibility = View.GONE
+                if (dy > 0 && binding.followLay.visibility!=View.GONE) {
+                    binding.followLay.visibility = View.GONE
 
-                    }
-                } else if (dy < 0 ) {
+                } else if (dy < 0 && binding.followLay.visibility!=View.VISIBLE ) {
                     binding.followLay.visibility = View.VISIBLE
 
 
@@ -122,9 +133,23 @@ class ProfileActivity : AppCompatActivity(), VoiceClick {
         followInfo()
 
 
+        binding.followBtn.setOnClickListener {
+            FollowManager().followUser(firebaseUser.uid, userId!!)
+
+        }
+
+
     }
 
     private fun followInfo(){
+        if (firebaseUser.uid.equals(userId)){
+            binding.followBtn.visibility = View.GONE
+        }else{
+            binding.followBtn.visibility = View.VISIBLE
+
+        }
+        FollowManager().updateFollowButton(firebaseUser.uid, userId!!,binding.followBtn)
+
         FollowManager().getFollowerCount(userId!!, binding.followers)
         FollowManager().getFollowingCount(userId!!, binding.followings)
 
@@ -143,15 +168,15 @@ class ProfileActivity : AppCompatActivity(), VoiceClick {
 
 
     private fun getUserInfo(){
-        viewModel.getUserInfoForActivity(userId, binding)
+        viewModel.getUserInfoForActivity(firebaseUser.uid, userId!!, binding)
     }
 
     private fun getMyVoices() {
         viewModel.getAllVoices().observe(this) { voices ->
+            pd.dismiss()
 
             voiceList?.addAll(voices!!)
             voiceAdapter?.notifyDataSetChanged()
-
             if (voiceList?.size!! >0){
                 binding.totalVoices.text = " Voices \n${voiceList?.size}"
             }else{
@@ -159,7 +184,9 @@ class ProfileActivity : AppCompatActivity(), VoiceClick {
             }
         }
 
-        viewModel.getMyVoices(userId!!)
+        //viewModel.getMyVoices(userId!!)
+        pd.dismiss()
+
         if (voiceList?.size!! >0){
             binding.totalVoices.text = " Voices \n${voiceList?.size}"
         }else{
@@ -214,8 +241,8 @@ class ProfileActivity : AppCompatActivity(), VoiceClick {
         CoroutineScope(Dispatchers.Main).launch {
             mediaPlayerProfile?.pause()
             mediaPlayerProfile?.seekTo(0)
-            binding?.playProfileVoiceBtn?.visibility = View.VISIBLE
-            binding?.pauseProfileVoiceBtn?.visibility = View.GONE
+            binding.playProfileVoiceBtn.visibility = View.VISIBLE
+            binding.pauseProfileVoiceBtn.visibility = View.GONE
         }
 
     }
@@ -269,10 +296,11 @@ class ProfileActivity : AppCompatActivity(), VoiceClick {
     override fun pickVoice(voice: Voice) {
         CoroutineScope(Dispatchers.Main).launch {
             DummyMethods.increaseViewedNumber(voice)
+            val pd = ProgressDialog(this@ProfileActivity, R.style.CustomDialog).apply {
+                setCancelable(false)
+                show()
+            }
 
-            val pd = ProgressDialog(this@ProfileActivity,R.style.CustomDialog)
-            pd.setCancelable(false)
-            pd.show()
             mediaPlayer?.release()
             val voiceUri = voice.voiceUrl.toUri()
 
@@ -280,18 +308,17 @@ class ProfileActivity : AppCompatActivity(), VoiceClick {
                 mediaPlayer = MediaPlayer().apply {
                     setDataSource(this@ProfileActivity, voiceUri)
                     setOnPreparedListener {
-                        // MediaPlayer hazır olduğunda yapılacak işlemler
-                        binding.mainPlayer.mainVoiceTitle.text = voice.voiceTitle
+                        binding.mainPlayer.apply {
+                            mainVoiceTitle.text = voice.voiceTitle
+                            playBtn.visibility = View.GONE
+                            pauseBtn.visibility = View.VISIBLE
+                            root.visibility = View.VISIBLE
+                        }
                         mediaPlayer!!.start()
                         initializeSeekBar()
-                        binding.mainPlayer.playBtn.visibility = View.GONE
-                        binding.mainPlayer.pauseBtn.visibility = View.VISIBLE
-                        binding.mainPlayer.root.visibility = View.VISIBLE
                         pd.dismiss()
-
                     }
                     prepareAsync()
-
                 }
             }
         }
@@ -304,8 +331,6 @@ class ProfileActivity : AppCompatActivity(), VoiceClick {
         intent.putExtra("voiceIdForLikes",voice.voiceId)
         startActivity(intent)
     }
-
-
 
 
     private fun destroyMedia(){
@@ -325,18 +350,19 @@ class ProfileActivity : AppCompatActivity(), VoiceClick {
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.mainPlayer.seekBar.progress = 0
-        mediaPlayer?.stop()
-        mediaPlayer?.reset()
-        mediaPlayer?.release()
-        if (mediaPlayer!=null){
-            handler.removeCallbacks(runnable)
-
-        }
-        mediaPlayer = null
-
+        destroyMedia()
 
     }
 
+    override fun onStart() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
+    }
 
 }

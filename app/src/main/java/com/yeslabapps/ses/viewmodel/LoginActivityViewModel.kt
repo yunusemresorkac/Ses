@@ -13,21 +13,21 @@ class LoginActivityViewModel(application: Application) : AndroidViewModel(applic
     private val userRepo: LoginActivityRepo = LoginActivityRepo()
     val errorMessage: LiveData<String> = userRepo.error
 
-    fun createUser(
-        deviceId: String?,
-        context: Activity?,
-        username: String?,
-        email: String?,
-        password: String?,
-        userId : String,
-        country : String,
-        bio :String,
-        firstName : String,
-        lastName : String
-    ) {
-        userRepo.createUser(deviceId, context!!, username!!,
-             email!!, password!!, userId,country,bio,firstName,lastName)
-    }
+//    fun createUser(
+//        deviceId: String?,
+//        context: Activity?,
+//        username: String?,
+//        email: String?,
+//        password: String?,
+//        userId : String,
+//        country : String,
+//        bio :String,
+//        firstName : String,
+//        lastName : String
+//    ) {
+//        userRepo.createUser(deviceId, context!!, username!!,
+//             email!!, password!!, userId,country,bio,firstName,lastName)
+//    }
 
     fun loginUser(context: Activity?, email: String?, password: String?, auth: FirebaseAuth?) {
         userRepo.loginUser(context!!, email, password, auth!!)

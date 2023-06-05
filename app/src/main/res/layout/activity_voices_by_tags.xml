@@ -13,7 +13,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/toolbar"
         android:backgroundTint="@color/itemOrange"
-        android:background="@drawable/login_bg">
+        android:background="@drawable/toolbar_bg">
 
         <TextView
             android:layout_width="wrap_content"

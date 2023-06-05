@@ -9,23 +9,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/toolbar"
-        android:backgroundTint="@color/itemOrange"
-        android:background="@drawable/login_bg">
+        android:background="@drawable/main_bg"
+        android:id="@+id/toolbar">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/explore"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textStyle="bold"
             android:fontFamily="@font/montserrat"
             android:textSize="18sp"/>
 
 
+        <ImageView
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:src="@drawable/filter_svgrepo_com"
+            android:layout_gravity="end"
+            android:id="@+id/filterBtn"
+            android:background="?selectableItemBackgroundBorderless"
+            android:layout_marginEnd="@dimen/_5sdp"
+            app:tint="@color/white" />
 
     </androidx.appcompat.widget.Toolbar>
-
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

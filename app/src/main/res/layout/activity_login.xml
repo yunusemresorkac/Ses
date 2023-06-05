@@ -5,19 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/itemOrange"
+    android:background="@drawable/main_bg"
     tools:context=".activity.LoginActivity">
 
 
     <LinearLayout
         android:id="@+id/loginInfoLayout"
         android:layout_width="match_parent"
+        android:layout_margin="@dimen/_10sdp"
         android:layout_height="wrap_content"
-        android:background="@drawable/login_lay_bg"
         android:gravity="center"
-
         android:padding="@dimen/_5sdp"
-        android:layout_marginTop="@dimen/_20sdp"
         android:orientation="horizontal">
 
 
@@ -67,6 +65,7 @@
         app:cardCornerRadius="@dimen/_3sdp"
         android:visibility="gone"
         app:cardElevation="@dimen/_3sdp"
+
         app:cardUseCompatPadding="true"
         >
 
@@ -74,7 +73,7 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/login_card_bg"
+            android:background="@drawable/main_bg"
 
             />
 
@@ -185,7 +184,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/login_card_bg"
+            android:background="@drawable/main_bg"
            />
 
         <ScrollView
@@ -350,7 +349,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/_10sdp"
-                    android:fontFamily="@font/alata"
+                    android:fontFamily="@font/montserrat"
                     android:text="@string/register"
                     android:textAllCaps="false"
                     android:textColor="@color/black"

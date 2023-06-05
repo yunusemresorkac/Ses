@@ -1,6 +1,8 @@
 package com.yeslabapps.ses.activity
 
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +16,7 @@ import com.yeslabapps.ses.controller.FollowManager
 import com.yeslabapps.ses.databinding.ActivityLikedUsersBinding
 import com.yeslabapps.ses.interfaces.UserClick
 import com.yeslabapps.ses.model.User
+import com.yeslabapps.ses.util.NetworkChangeListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,6 +29,8 @@ class LikedUsersActivity : AppCompatActivity(),UserClick {
     private var userAdapter: UserAdapter? = null
     private var idlist: ArrayList<String>? = null
     private var firebaseUser : FirebaseUser? = null
+    private val networkChangeListener = NetworkChangeListener()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,6 +116,17 @@ class LikedUsersActivity : AppCompatActivity(),UserClick {
     }
 
 
+
+    override fun onStart() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
+    }
 
 
 }

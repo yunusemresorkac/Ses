@@ -10,4 +10,5 @@ data class User(val username : String = "",
                 val lastName : String = "",
                 val deviceId : String = "",
                 val profileVoice : String = "",
-                var followers : Int = 0)
+                var followers : Int = 0,
+                val privateProfile : Boolean = false)

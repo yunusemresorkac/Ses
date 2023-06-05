@@ -20,4 +20,24 @@
     <string name="you_are_not_following_anyone_let_s_discover_new_channels">You are not following anyone. Let\'s discover new channels.</string>
     <string name="options">Options</string>
     <string name="here_the_most_popular_posts_according_to_your_country_will_be_displayed">Here, the most popular posts according to your country will be displayed</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
+    <string name="private_profile">Private Profile</string>
+    <string name="bu_hesap_gizlidir_payla_mlar_g_rmek_i_in_takip_edin">This account is private. Follow to see the voices.</string>
+    <string name="download_voice">Download Voice</string>
+    <string name="share_voice">Share Voice</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="most_listened">Most Listened</string>
+    <string name="favorites">Favorites</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="biography">Biography</string>
+    <string name="type_here">Type here</string>
+    <string name="title">Title</string>
+    <string name="my_likes">My Likes</string>
+    <string name="no_internet_connection_found">No Internet Connection Found</string>
+    <string name="please_try_again">Please Try Again</string>
+    <string name="change_theme">Change Theme</string>
+    <string name="search">Search</string>
 </resources>

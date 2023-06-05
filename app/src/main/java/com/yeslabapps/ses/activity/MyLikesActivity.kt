@@ -3,7 +3,9 @@ package com.yeslabapps.ses.activity
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.IntentFilter
 import android.media.MediaPlayer
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -19,6 +21,7 @@ import com.yeslabapps.ses.adapter.VoiceAdapter
 import com.yeslabapps.ses.databinding.ActivityMyLikesBinding
 import com.yeslabapps.ses.interfaces.VoiceClick
 import com.yeslabapps.ses.model.Voice
+import com.yeslabapps.ses.util.NetworkChangeListener
 import com.yeslabapps.ses.viewmodel.FirebaseViewModel
 import com.yeslabapps.ses.viewmodel.MyLikesViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +42,7 @@ class MyLikesActivity : AppCompatActivity(),VoiceClick {
     private var pause:Boolean = false
     private lateinit var runnable:Runnable
     private var handler: Handler = Handler()
+    private val networkChangeListener = NetworkChangeListener()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -165,8 +169,6 @@ class MyLikesActivity : AppCompatActivity(),VoiceClick {
         viewModel.checkForFollowers(firebaseUser!!.uid)
     }
 
-
-
     private fun destroyMedia(){
         binding.mainPlayer.seekBar.progress = 0
         mediaPlayer?.stop()
@@ -223,10 +225,27 @@ class MyLikesActivity : AppCompatActivity(),VoiceClick {
     }
 
     override fun clickUser(voice: Voice) {
+        destroyMedia()
+
         val intent = Intent(this,ProfileActivity::class.java)
         intent.putExtra("userId",voice.publisherId)
         startActivity(intent)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        destroyMedia()
+    }
 
+
+    override fun onStart() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
+    }
 }

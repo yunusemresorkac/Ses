@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/_2sdp"
-            android:background="@color/itemOrange"
+            android:background="@drawable/main_bg"
             android:id="@+id/toolbar">
 
             <LinearLayout
@@ -32,12 +32,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat"
-                    android:text="First Name"
+                    android:text=""
                     android:id="@+id/fullName"
 
                     android:layout_marginStart="@dimen/_3sdp"
                     android:layout_marginTop="@dimen/_4sdp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
                 <TextView
@@ -46,11 +46,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_3sdp"
                     android:fontFamily="@font/montserrat"
-                    android:text="Username"
-                    android:textColor="@color/black"
+                    android:text=""
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
             </LinearLayout>
+
 
 
 
@@ -60,23 +61,33 @@
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
                 android:background="?selectableItemBackgroundBorderless"
-                android:layout_alignParentEnd="true"
                 android:layout_gravity="end"
+                android:visibility="gone"
                 android:layout_marginEnd="@dimen/_4sdp"
-                android:src="@drawable/play_square_svgrepo_com" />
+                android:src="@drawable/play_square_svgrepo_com"
+                app:tint="@color/white" />
 
 
             <ImageView
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
                 android:src="@drawable/pause_square_svgrepo_com"
-                android:layout_alignParentEnd="true"
-                android:visibility="gone"
                 android:background="?selectableItemBackgroundBorderless"
                 android:layout_gravity="end"
-
+                android:visibility="gone"
                 android:layout_marginEnd="@dimen/_4sdp"
-                android:id="@+id/pauseProfileVoiceBtn"/>
+                android:id="@+id/pauseProfileVoiceBtn"
+                app:tint="@color/white" />
+
+            <ImageView
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@drawable/user_add_svgrepo_com__1_"
+                android:id="@+id/followBtn"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/_5sdp"
+                app:tint="@color/white" />
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -96,8 +107,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_below="@id/toolbar"
-            android:background="@drawable/login_lay_bg"
-            android:backgroundTint="@color/itemOrange"
             android:id="@+id/followLay"
             android:padding="@dimen/_15sdp"
             android:layout_height="wrap_content">
@@ -107,6 +116,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/followLay2"
                 android:orientation="horizontal">
 
 
@@ -116,7 +126,6 @@
                     app:cardCornerRadius="@dimen/_4sdp"
                     android:layout_weight="1"
                     app:cardUseCompatPadding="true"
-                    app:cardBackgroundColor="@color/itemOrange"
                     android:layout_margin="@dimen/_4sdp">
 
 
@@ -136,7 +145,7 @@
                             android:gravity="center"
                             android:layout_margin="@dimen/_2sdp"
                             android:text=""
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:fontFamily="@font/montserrat"/>
 
                     </LinearLayout>
@@ -152,7 +161,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     app:cardUseCompatPadding="true"
-                    app:cardBackgroundColor="@color/itemOrange"
 
                     app:cardCornerRadius="@dimen/_4sdp"
                     android:layout_margin="@dimen/_4sdp">
@@ -173,7 +181,7 @@
                             android:gravity="center"
                             android:layout_margin="@dimen/_2sdp"
                             android:text=""
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:fontFamily="@font/montserrat"/>
 
                     </LinearLayout>
@@ -187,7 +195,6 @@
                     app:cardCornerRadius="@dimen/_4sdp"
                     android:layout_weight="1"
                     app:cardUseCompatPadding="true"
-                    app:cardBackgroundColor="@color/itemOrange"
 
                     android:layout_margin="@dimen/_4sdp">
 
@@ -211,7 +218,7 @@
                             android:layout_marginBottom="@dimen/_2sdp"
                             android:fontFamily="@font/montserrat"
                             android:text=""
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -226,6 +233,19 @@
             </LinearLayout>
 
 
+            <TextView
+                android:id="@+id/bioText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/followLay2"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:fontFamily="@font/montserrat"
+                android:text=""
+                android:textColor="@color/white" />
+
 
 
 
@@ -236,7 +256,7 @@
 
 
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/mainPlayer"
@@ -245,6 +265,20 @@
         app:layout_constraintTop_toBottomOf="@id/headerLay"
         >
 
+        <TextView
+            android:id="@+id/privateInfoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/montserrat"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="@string/bu_hesap_gizlidir_payla_mlar_g_rmek_i_in_takip_edin"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -252,7 +286,7 @@
             android:id="@+id/recyclerView"/>
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
     <include

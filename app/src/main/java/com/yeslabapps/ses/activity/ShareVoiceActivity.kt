@@ -3,10 +3,14 @@ package com.yeslabapps.ses.activity
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.IntentFilter
 import android.media.MediaPlayer
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import android.widget.LinearLayout
@@ -23,7 +27,13 @@ import com.yeslabapps.ses.R
 import com.yeslabapps.ses.controller.DummyMethods
 import com.yeslabapps.ses.databinding.ActivityShareVoiceBinding
 import com.yeslabapps.ses.util.Constants
+import com.yeslabapps.ses.util.NetworkChangeListener
 import com.yeslabapps.ses.viewmodel.FirebaseViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -53,6 +63,8 @@ class ShareVoiceActivity : AppCompatActivity() {
     private lateinit var textContainer: LinearLayout
     private val firebaseViewModel by viewModel<FirebaseViewModel>()
 
+    private val networkChangeListener = NetworkChangeListener()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,11 +79,27 @@ class ShareVoiceActivity : AppCompatActivity() {
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
         textContainer = findViewById(R.id.textContainer)
 
+
+        binding.voiceTitleEt.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s != null) {
+                    val remainingChars = Constants.LENGTH_OF_VOICE_TITLE - s.length
+                    binding.characterCount.text = remainingChars.toString()
+                }
+            }
+        })
+
+
+
         binding.sendVoiceBtn.setOnClickListener {
             if (binding.voiceTitleEt.text.isNotEmpty() && audioUri!=null  ){
                 saveAudioToFirestore(audioUri!!,binding.voiceTitleEt.text.toString().trim())
             }else{
-                Toast.makeText(this,"Please compelte all fields!",Toast.LENGTH_SHORT).show()
+                DummyMethods.showCookie(this,"Please compelete all fields!","")
             }
         }
 
@@ -198,7 +226,7 @@ class ShareVoiceActivity : AppCompatActivity() {
             val textView = TextView(this)
             textView.text = "$item (❌)"
             textView.textSize = 15F
-            textView.setTextColor(resources.getColor(R.color.black))
+            textView.setTextColor(resources.getColor(R.color.white))
             textView.setOnClickListener { view ->
                 val clickedItem = (view as TextView).text.toString().removeSuffix(" (❌)")
                 tagList.remove(clickedItem)
@@ -231,7 +259,7 @@ class ShareVoiceActivity : AppCompatActivity() {
             }
             else{
                 recreate()
-                Toast.makeText(this,"en fazla 120 sn pls",Toast.LENGTH_SHORT).show()
+                DummyMethods.showCookie(this,"You can upload a maximum of 120 seconds of voice!","")
             }
         }
 
@@ -253,7 +281,7 @@ class ShareVoiceActivity : AppCompatActivity() {
         val storageRef = storage.reference
         val randomString: String = DummyMethods.generateRandomString(12)
 
-        val filePath = storageRef.child("Voices/$randomString")
+        val filePath = storageRef.child("Voices/$voiceTitle - $randomString")
 
         filePath.putFile(audioUri)
             .addOnSuccessListener { taskSnapshot ->
@@ -263,36 +291,34 @@ class ShareVoiceActivity : AppCompatActivity() {
                         val sdf = SimpleDateFormat("EE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
                         val strDate: String = sdf.format(date)
 
-                        var userCountry = ""
                         firebaseViewModel.getUserCountry(firebaseUser.uid) { country ->
-                            // Burada ülke değeri kullanılabilir
-                            println(country)
 
-                            userCountry = country
+                            val voice = hashMapOf(
+                                "voiceTitle" to voiceTitle,
+                                "voiceUrl" to downloadUri.toString(),
+                                "voiceId" to randomString,
+                                "publisherId" to firebaseUser.uid,
+                                "time" to strDate,
+                                "duration" to voiceTime,
+                                "tags" to tagList,
+                                "countOfLikes" to 0,
+                                "relatedCountry" to  country,
+                                "listened" to 0
+                            )
+                            firestore.collection("Voices")
+                                .document(randomString)
+                                .set(voice)
+                                .addOnSuccessListener {
+                                    saveMyVoices(randomString,voice)
+                                    progressDialog.dismiss()
+                                    finish()
+                                }
+                                .addOnFailureListener {
+                                }
+
                         }
 
-                        val voice = hashMapOf(
-                            "voiceTitle" to voiceTitle,
-                            "voiceUrl" to downloadUri.toString(),
-                            "voiceId" to randomString,
-                            "publisherId" to firebaseUser.uid,
-                            "time" to strDate,
-                            "voiceTime" to voiceTime,
-                            "tags" to tagList,
-                            "countOfLikes" to 0,
-                            "relatedCountry" to  userCountry
-                        )
 
-                        firestore.collection("Voices")
-                            .document(randomString)
-                            .set(voice)
-                            .addOnSuccessListener {
-                                saveMyVoices(randomString,voice)
-                                progressDialog.dismiss()
-                                finish()
-                            }
-                            .addOnFailureListener {
-                            }
                     }
                     .addOnFailureListener {
                     }
@@ -302,20 +328,19 @@ class ShareVoiceActivity : AppCompatActivity() {
                 val progress: Double =
                     100.0 * it.bytesTransferred / it.totalByteCount
                 val currentProgress = progress.toInt()
-                progressDialog.setMessage("Yüklendi: $currentProgress%")
+                progressDialog.setMessage("Loading... $currentProgress%")
             }
 
 
     }
 
+
+
     private fun checkForSend(){
         binding.sendVoiceBtn.isEnabled = audioUri != null
     }
 
-    override fun onStart() {
-        super.onStart()
-        checkForSend()
-    }
+
 
     override fun onResume() {
         super.onResume()
@@ -338,6 +363,17 @@ class ShareVoiceActivity : AppCompatActivity() {
 
     }
 
+    override fun onStart() {
+        checkForSend()
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
+    }
 
 
 }

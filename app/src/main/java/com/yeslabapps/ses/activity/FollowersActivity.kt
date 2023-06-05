@@ -1,6 +1,8 @@
 package com.yeslabapps.ses.activity
 
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +17,7 @@ import com.yeslabapps.ses.controller.FollowManager
 import com.yeslabapps.ses.databinding.ActivityFollowersBinding
 import com.yeslabapps.ses.interfaces.UserClick
 import com.yeslabapps.ses.model.User
+import com.yeslabapps.ses.util.NetworkChangeListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,6 +32,7 @@ class FollowersActivity : AppCompatActivity(), UserClick {
     private var userList: ArrayList<User>? = null
     private var userAdapter: UserAdapter? = null
     private var userId : String? = null
+    private val networkChangeListener = NetworkChangeListener()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,4 +138,17 @@ class FollowersActivity : AppCompatActivity(), UserClick {
         intent.putExtra("userId",user.userId)
         startActivity(intent)
     }
+
+
+    override fun onStart() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
+    }
+
 }

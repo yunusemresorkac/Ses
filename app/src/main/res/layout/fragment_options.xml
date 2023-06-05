@@ -9,15 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/toolbar"
-        android:backgroundTint="@color/itemOrange"
-        android:background="@drawable/login_bg">
+        android:background="@drawable/main_bg"
+        android:id="@+id/toolbar">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/options"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textStyle="bold"
             android:fontFamily="@font/montserrat"
             android:textSize="18sp"/>
@@ -34,13 +33,14 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:background="?selectableItemBackground"
+            android:background="@drawable/main_bg"
 
             android:layout_height="wrap_content"
             android:padding="@dimen/_5sdp">
 
             <ImageView
                 android:layout_width="@dimen/_30sdp"
+                app:tint="@color/white"
                 android:layout_height="@dimen/_30sdp"
                 android:src="@drawable/ic_baseline_edit_24"/>
 
@@ -48,11 +48,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Edit Profile"
-                android:textColor="@color/black"
                 android:fontFamily="@font/montserrat"
+                android:text="@string/edit_profile"
+                android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
 
         </RelativeLayout>
@@ -72,7 +72,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?selectableItemBackground"
+            android:background="@drawable/main_bg"
             android:padding="@dimen/_5sdp">
 
             <ImageView
@@ -85,11 +85,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Favorites"
-                android:textColor="@color/black"
                 android:fontFamily="@font/montserrat"
+                android:text="@string/favorites"
+                android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
 
         </RelativeLayout>
@@ -107,7 +107,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:background="?selectableItemBackground"
+            android:background="@drawable/main_bg"
 
             android:layout_height="wrap_content"
             android:padding="@dimen/_5sdp">
@@ -115,17 +115,18 @@
             <ImageView
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
-                android:src="@drawable/ic_baseline_logout_24"/>
+                android:src="@drawable/ic_baseline_logout_24"
+                app:tint="@color/white" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Sign Out"
-                android:textColor="@color/black"
                 android:fontFamily="@font/montserrat"
+                android:text="@string/sign_out"
+                android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
 
         </RelativeLayout>
@@ -133,7 +134,17 @@
 
     </androidx.cardview.widget.CardView>
 
-
+    <androidx.appcompat.widget.SwitchCompat
+        android:textStyle="bold"
+        android:id="@+id/switchCompat"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserrat"
+        android:text="@string/change_theme"
+        android:padding="10dp"
+        app:switchPadding="10dp"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 
 

@@ -1,17 +1,27 @@
 package com.yeslabapps.ses.fragment
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
+import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.yeslabapps.ses.R
+import com.yeslabapps.ses.activity.LikedUsersActivity
+import com.yeslabapps.ses.activity.ProfileActivity
 import com.yeslabapps.ses.adapter.VoiceAdapter
 import com.yeslabapps.ses.controller.DummyMethods
 import com.yeslabapps.ses.databinding.FragmentSearchVoiceByTitleBinding
@@ -31,7 +41,10 @@ class SearchVoiceFragmentByTitle : Fragment(),VoiceClick {
     private var firebaseUser : FirebaseUser? = null
     private var voiceList : ArrayList<Voice>? = null
 
-
+    private  var mediaPlayer: MediaPlayer? = null
+    private var pause:Boolean = false
+    private lateinit var runnable:Runnable
+    private var handler: Handler = Handler()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -52,6 +65,29 @@ class SearchVoiceFragmentByTitle : Fragment(),VoiceClick {
 
 
         binding?.searchEt?.addTextChangedListener(textWatcher)
+
+        binding?.mainPlayer?.playBtn?.setOnClickListener { play() }
+        binding?.mainPlayer?.pauseBtn?.setOnClickListener { pause() }
+
+        binding?.mainPlayer?.seekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
+                if (b) {
+                    mediaPlayer?.seekTo(i * 1000)
+
+                    mediaPlayer?.setOnCompletionListener {
+                        binding?.mainPlayer?.root?.visibility = View.GONE
+                    }
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+            }
+        })
+
+
 
 
     }
@@ -86,7 +122,10 @@ class SearchVoiceFragmentByTitle : Fragment(),VoiceClick {
             val db = FirebaseFirestore.getInstance()
             val usersRef = db.collection("Voices")
 
+
             val querySnapshot = usersRef.whereGreaterThanOrEqualTo("voiceTitle", query)
+                .orderBy("voiceTitle") // İlk sıralama kuralı olarak "voiceTitle" alanını kullanın
+                .orderBy("listened",Query.Direction.ASCENDING)
                 .whereLessThanOrEqualTo("voiceTitle", query + "\uf8ff")
                 .get()
                 .await()
@@ -107,46 +146,145 @@ class SearchVoiceFragmentByTitle : Fragment(),VoiceClick {
                     voiceAdapter = VoiceAdapter(voiceList!!, requireContext(), this@SearchVoiceFragmentByTitle)
                     binding?.recyclerView?.adapter = voiceAdapter
                     voiceAdapter.notifyDataSetChanged()
-                } else {
-                    searchVoicesByTag(query)
                 }
             }
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private suspend fun searchVoicesByTag(query: String) {
-        val db = FirebaseFirestore.getInstance()
-        val usersRef = db.collection("Voices")
+    val MediaPlayer.seconds:Int
+        get() {
+            return this.duration / 1000
+        }
+    val MediaPlayer.currentSeconds:Int
+        get() {
+            return this.currentPosition/1000
+        }
 
-        val querySnapshot = usersRef.whereGreaterThanOrEqualTo("tags", query)
-            .whereLessThanOrEqualTo("tags", query + "\uf8ff")
-            .get()
-            .await()
+
+    private fun initializeSeekBar() {
+        binding?.mainPlayer?.seekBar!!.max = mediaPlayer!!.seconds
+
+        runnable = Runnable {  binding?.mainPlayer?.seekBar?.progress = mediaPlayer!!.currentSeconds
 
 
-        for (document in querySnapshot.documents) {
-            val voice = document.toObject(Voice::class.java)
-            if (voice != null) {
-                voiceList?.add(voice)
+            handler.postDelayed(runnable, 1000)
+
+        }
+        handler.postDelayed(runnable, 1000)
+    }
+
+    private fun play(){
+        CoroutineScope(Dispatchers.Main).launch {
+            if(pause){
+                mediaPlayer?.seekTo(mediaPlayer!!.currentPosition)
+                mediaPlayer?.start()
+                pause = false
+            }else{
+
+                if (mediaPlayer!=null){
+                    mediaPlayer!!.stop()
+                    mediaPlayer!!.release()
+                }
+                mediaPlayer?.start()
+
+            }
+            binding?.mainPlayer?.playBtn?.visibility = View.GONE
+            binding?.mainPlayer?.pauseBtn?.visibility = View.VISIBLE
+
+            mediaPlayer?.setOnCompletionListener {
+                binding?.mainPlayer?.playBtn?.visibility = View.VISIBLE
+                binding?.mainPlayer?.pauseBtn?.visibility = View.GONE
             }
         }
 
-        withContext(Dispatchers.Main) {
-            voiceAdapter = VoiceAdapter(voiceList!!, requireContext(), this@SearchVoiceFragmentByTitle)
-            binding?.recyclerView?.adapter = voiceAdapter
-            voiceAdapter.notifyDataSetChanged()
-        }
     }
 
+    private fun pause(){
+        CoroutineScope(Dispatchers.Main).launch {
+            if(mediaPlayer!!.isPlaying){
+
+                mediaPlayer!!.pause()
+                pause = true
+                binding?.mainPlayer?.playBtn?.visibility = View.VISIBLE
+                binding?.mainPlayer?.pauseBtn?.visibility = View.GONE
+            }
+
+        }
+
+    }
+
+
+    private fun destroyMedia(){
+        binding?.mainPlayer?.seekBar?.progress = 0
+        mediaPlayer?.stop()
+        mediaPlayer?.reset()
+        mediaPlayer?.release()
+        if (mediaPlayer!=null){
+            handler.removeCallbacks(runnable)
+
+        }
+        mediaPlayer = null
+        binding?.mainPlayer?.root?.visibility = View.GONE
+    }
+
+
+
+
+
+
+
     override fun pickVoice(voice: Voice) {
-        DummyMethods.increaseViewedNumber(voice)
+        CoroutineScope(Dispatchers.Main).launch {
+            DummyMethods.increaseViewedNumber(voice)
+            val pd = ProgressDialog(context, R.style.CustomDialog).apply {
+                setCancelable(false)
+                show()
+            }
+
+            mediaPlayer?.release()
+            val voiceUri = voice.voiceUrl.toUri()
+
+            withContext(Dispatchers.IO) {
+                mediaPlayer = MediaPlayer().apply {
+                    setDataSource(requireContext(), voiceUri)
+                    setOnPreparedListener {
+                        binding?.mainPlayer?.apply {
+                            mainVoiceTitle.text = voice.voiceTitle
+                            playBtn.visibility = View.GONE
+                            pauseBtn.visibility = View.VISIBLE
+                            root.visibility = View.VISIBLE
+                        }
+                        mediaPlayer!!.start()
+                        initializeSeekBar()
+                        pd.dismiss()
+                    }
+                    prepareAsync()
+                }
+            }
+        }
 
     }
 
     override fun seeLikers(voice: Voice) {
+        destroyMedia()
+
+        val intent = Intent(context, LikedUsersActivity::class.java)
+        intent.putExtra("voiceIdForLikes",voice.voiceId)
+        startActivity(intent)
     }
 
+    override fun clickUser(voice: Voice) {
+        destroyMedia()
+
+        val intent = Intent(context, ProfileActivity::class.java)
+        intent.putExtra("userId",voice.publisherId)
+        startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        destroyMedia()
+    }
 
 }
 

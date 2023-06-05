@@ -57,7 +57,6 @@ class SearchUserFragment : Fragment(),UserClick {
         binding?.recyclerView?.layoutManager = LinearLayoutManager(context)
 
 
-        binding?.searchEt?.requestFocus()
 
         binding?.searchEt?.addTextChangedListener(textWatcher)
 

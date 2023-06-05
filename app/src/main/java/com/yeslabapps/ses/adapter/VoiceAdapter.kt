@@ -15,7 +15,9 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yeslabapps.ses.R
 import com.yeslabapps.ses.activity.VoicesByTagsActivity
+import com.yeslabapps.ses.controller.DummyMethods
 import com.yeslabapps.ses.controller.DummyMethods.Companion.formatSecondsToMinutes
+import com.yeslabapps.ses.controller.DummyMethods.Companion.getTimeAgo
 import com.yeslabapps.ses.controller.LikeManager
 import com.yeslabapps.ses.databinding.VoiceItemBinding
 import com.yeslabapps.ses.interfaces.VoiceClick
@@ -53,7 +55,10 @@ class VoiceAdapter(private val voiceList : ArrayList<Voice>, val context: Contex
 
         holder.binding.voiceTitle.text = voice.voiceTitle
         holder.binding.publishTime.text = getTimeAgo(voice.time)
-        holder.binding.voiceSeconds.text = formatSecondsToMinutes(voice.voiceTime)
+        holder.binding.voiceSeconds.text = formatSecondsToMinutes(voice.duration)
+
+
+
 
         if (voice.tags!=null){
             val tagsText = StringBuilder()
@@ -76,7 +81,7 @@ class VoiceAdapter(private val voiceList : ArrayList<Voice>, val context: Contex
                 textView.ellipsize = TextUtils.TruncateAt.END
                 textView.maxLines = 1
                 textView.textSize = 18f
-                textView.setTextColor(context.resources.getColor(R.color.black))
+                textView.setTextColor(context.resources.getColor(R.color.white))
                 textView.layoutParams = layoutParams
 
                 textView.setOnClickListener {
@@ -152,20 +157,7 @@ class VoiceAdapter(private val voiceList : ArrayList<Voice>, val context: Contex
         getUserInfoForVoiceAdapter(voice.publisherId,holder)
 
 
-    }
-    private fun getTimeAgo(date: String): String {
-        val sdf = SimpleDateFormat("EE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
-        val fromTimeZone = "UTC"
-        sdf.timeZone = TimeZone.getTimeZone(fromTimeZone)
-        try {
-            val time: Long = sdf.parse(date)!!.time
-            val now = System.currentTimeMillis()
-            val ago = DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS)
-            return ago.toString() + ""
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
-        return ""
+
     }
 
 
@@ -191,6 +183,8 @@ class VoiceAdapter(private val voiceList : ArrayList<Voice>, val context: Contex
             }
         }
     }
+
+
 
 
     override fun getItemCount(): Int {
