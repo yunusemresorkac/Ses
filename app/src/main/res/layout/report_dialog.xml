@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/white"
+    >
+
+
+    <RadioGroup
+        android:id="@+id/reportVoice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+
+        >
+
+        <!-- In RadioGroup create the 1 Radio Button-->
+        <!-- like this we will add some more Radio Button-->
+        <RadioButton
+            android:id="@+id/radia_id1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?android:textColorPrimary"
+            android:text="Sexual Content and Profanity"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/radia_id2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?android:textColorPrimary"
+
+            android:text="Hate Speech"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/radia_id3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?android:textColorPrimary"
+
+            android:text="Violence"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/radia_id4"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?android:textColorPrimary"
+
+            android:text="Terrorist Content"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/radia_id5"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Dangerous Movements and Organizations"
+            android:textColor="?android:textColorPrimary"
+
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/radia_id6"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Bullying and Harassment"
+            android:textColor="?android:textColorPrimary"
+
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/radia_id7"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Sensitive Events"
+            android:textColor="?android:textColorPrimary"
+
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/radia_id8"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?android:textColorPrimary"
+
+            android:text="Dangerous Products"
+            android:textSize="16sp" />
+
+
+        <RadioButton
+            android:id="@+id/radia_id9"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Marijuana"
+            android:textColor="?android:textColorPrimary"
+
+            android:textSize="16sp" />
+
+
+        <RadioButton
+            android:id="@+id/radia_id10"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Tobacco and Alcohol"
+            android:textColor="?android:textColorPrimary"
+
+            android:textSize="16sp" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/sendReport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:textColor="@color/black"
+        android:text="REPORT"
+        android:backgroundTint="@color/itemOrange"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+
+</LinearLayout>

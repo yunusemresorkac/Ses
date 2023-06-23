@@ -21,9 +21,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:layout_marginStart="@dimen/_4sdp"
-        android:layout_marginEnd="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:id="@+id/addNewVoice"
         app:cardCornerRadius="@dimen/_4sdp">
 
@@ -61,7 +61,10 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
         android:id="@+id/addProfileVoice"
         app:cardCornerRadius="@dimen/_4sdp">
 

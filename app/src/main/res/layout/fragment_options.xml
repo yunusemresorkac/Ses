@@ -34,7 +34,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:background="@drawable/main_bg"
-
+            android:foreground="?selectableItemBackground"
             android:layout_height="wrap_content"
             android:padding="@dimen/_5sdp">
 
@@ -72,6 +72,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:foreground="?selectableItemBackground"
+
             android:background="@drawable/main_bg"
             android:padding="@dimen/_5sdp">
 
@@ -98,6 +100,96 @@
     </androidx.cardview.widget.CardView>
 
 
+
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/_4sdp"
+        android:layout_margin="@dimen/_4sdp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@drawable/main_bg"
+            android:foreground="?selectableItemBackground"
+
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_5sdp">
+
+            <ImageView
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@drawable/mode_light_svgrepo_com"
+                app:tint="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/montserrat"
+                android:text="@string/change_theme"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:textStyle="bold"
+                android:id="@+id/switchCompat"
+                android:layout_alignParentEnd="true"
+                android:fontFamily="@font/montserrat"
+                android:padding="10dp"
+                app:switchPadding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/goPremium"
+        app:cardCornerRadius="@dimen/_4sdp"
+        android:layout_margin="@dimen/_4sdp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@drawable/main_bg"
+            android:foreground="?selectableItemBackground"
+
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_5sdp">
+
+            <ImageView
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@drawable/red_dimond_premium_svgrepo_com"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/montserrat"
+                android:text="@string/get_premium"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+
+
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
     <androidx.cardview.widget.CardView
         android:id="@+id/signOutBtn"
         android:layout_width="match_parent"
@@ -108,6 +200,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:background="@drawable/main_bg"
+            android:foreground="?selectableItemBackground"
 
             android:layout_height="wrap_content"
             android:padding="@dimen/_5sdp">
@@ -133,19 +226,5 @@
 
 
     </androidx.cardview.widget.CardView>
-
-    <androidx.appcompat.widget.SwitchCompat
-        android:textStyle="bold"
-        android:id="@+id/switchCompat"
-        android:textSize="16sp"
-        android:fontFamily="@font/montserrat"
-        android:text="@string/change_theme"
-        android:padding="10dp"
-        app:switchPadding="10dp"
-        android:layout_margin="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-
 
 </LinearLayout>

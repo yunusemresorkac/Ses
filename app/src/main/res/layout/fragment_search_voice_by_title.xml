@@ -23,6 +23,8 @@
             android:padding="@dimen/_8sdp"
             android:drawableStart="@drawable/ic_baseline_search_24"
             android:textSize="14sp"
+            android:backgroundTint="?android:textColorPrimary"
+
             android:drawableTint="?android:textColorPrimary"
             android:textColorHint="?android:textColorPrimary"
             android:textColor="?android:textColorPrimary"

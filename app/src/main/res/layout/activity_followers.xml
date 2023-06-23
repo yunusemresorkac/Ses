@@ -12,14 +12,13 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/toolbar"
-        android:backgroundTint="@color/itemOrange"
-        android:background="@drawable/toolbar_bg">
+        android:background="@drawable/main_bg">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Followers"
-            android:textColor="@color/black"
+            android:text="@string/followers"
+            android:textColor="@color/white"
             android:textStyle="bold"
             android:fontFamily="@font/montserrat"
             android:textSize="18sp"/>

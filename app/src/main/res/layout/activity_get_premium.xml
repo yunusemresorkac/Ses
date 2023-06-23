@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.GetPremiumActivity"
+    android:background="@drawable/voice_card_bg"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/toolbar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/get_premium"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:fontFamily="@font/montserrat"
+            android:textSize="18sp"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/buyBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackground"
+        android:layout_below="@id/toolbar"
+        app:cardCornerRadius="@dimen/_4sdp"
+        android:layout_margin="@dimen/_8sdp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@drawable/info_card_bg"
+            android:foreground="?selectableItemBackground"
+
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_5sdp">
+
+            <ImageView
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="@dimen/_60sdp"
+                android:src="@drawable/red_dimond_premium_svgrepo_com"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:id="@+id/priceText"
+                android:fontFamily="@font/montserrat"
+                android:text="@string/buy"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buyBtn"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:fontFamily="@font/montserrat"
+        android:gravity="center"
+        android:text="@string/premiumInfo"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+
+
+
+
+</RelativeLayout>

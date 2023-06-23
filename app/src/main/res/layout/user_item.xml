@@ -14,18 +14,28 @@
         android:padding="@dimen/_4sdp">
 
 
+        <ImageView
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:src="@drawable/tick_svgrepo_com"
+            android:layout_toEndOf="@id/username"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:id="@+id/verifiedTick"/>
+
         <TextView
+            android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/username"
             android:layout_centerInParent="true"
+            android:layout_toEndOf="@id/followBtn"
             android:fontFamily="@font/montserrat"
-            android:textSize="16sp"
-            android:maxLines="1"
-            android:textStyle="bold"
-            android:layout_marginTop="@dimen/_5sdp"
+            android:maxLines="2"
             android:text=""
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
 
         <ImageView

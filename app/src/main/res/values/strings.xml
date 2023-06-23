@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ses</string>
+    <string name="app_name">Sesly</string>
     <string name="let_s_start_with_your_interests">Let\'s Start with Your Interests</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -40,4 +40,15 @@
     <string name="please_try_again">Please Try Again</string>
     <string name="change_theme">Change Theme</string>
     <string name="search">Search</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="report_voice">Report Voice</string>
+
+    <string name="sesly">Sesly</string>
+    <string name="get_premium">Get Premium</string>
+    <string name="buy">Buy</string>
+    <string name="privacy_settings">Privacy Settings</string>
+    <string name="show_my_country">Show My Country</string>
+    <string name="show_my_join_date">Show My Join Date</string>
+    <string name="premiumInfo">•You can download the voices to your phone.\n\n•An orange checkmark will appear at the end of your name, indicating that your account has been approved.\n\n•This is a one-time payment.</string>
 </resources>

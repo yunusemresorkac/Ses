@@ -84,7 +84,7 @@
                     android:layout_marginTop="@dimen/_2sdp"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_gravity="end"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/white" />
 
 
             </LinearLayout>
@@ -107,70 +107,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/personal_information"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:textColor="@color/white"
-                    android:fontFamily="@font/montserrat"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/first_name"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:textColor="@color/white"
-                    android:fontFamily="@font/montserrat"/>
-
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/firstNameEt"
-                    android:hint="@string/first_name"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:padding="@dimen/_8sdp"
-                    android:background="@drawable/rect_border"
-                    android:gravity="start"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
-                    android:fontFamily="@font/montserrat"
-                    android:maxLength="15"/>
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/last_name"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:textColor="@color/white"
-                    android:fontFamily="@font/montserrat"/>
-
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/lastNameEt"
-                    android:hint="@string/last_name"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:padding="@dimen/_8sdp"
-                    android:gravity="start"
-                    android:background="@drawable/rect_border"
-
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
-                    android:fontFamily="@font/montserrat"
-                    android:maxLength="15"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="@string/username"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_5sdp"
@@ -185,6 +121,7 @@
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_5sdp"
                     android:padding="@dimen/_8sdp"
+
                     android:gravity="start"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
@@ -193,7 +130,8 @@
 
                     android:fontFamily="@font/montserrat"
                     android:maxLength="15"
-                    />
+                    app:drawableEndCompat="@drawable/ic_baseline_lock_24"
+                    app:drawableTint="@color/white" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -216,10 +154,20 @@
                     android:background="@drawable/rect_border"
                     android:gravity="start"
                     android:textColor="@color/white"
+                    app:drawableEndCompat="@drawable/ic_baseline_lock_24"
+                    app:drawableTint="@color/white"
                     android:textColorHint="@color/white"
                     android:fontFamily="@font/montserrat"
                     />
-                
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/privacy_settings"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/montserrat"/>
 
                 <CheckBox
                     android:layout_width="match_parent"
@@ -232,6 +180,36 @@
                     android:layout_marginTop="@dimen/_5sdp"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:fontFamily="@font/montserrat"/>
+
+                <CheckBox
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/show_my_country"
+                    android:buttonTint="@color/white"
+                    android:id="@+id/countryShow"
+                    android:textColor="@color/white"
+                    app:thumbTint="@color/white"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat"/>
+
+                <CheckBox
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/show_my_join_date"
+                    android:buttonTint="@color/white"
+                    android:id="@+id/showRegisterDate"
+                    android:textColor="@color/white"
+                    app:thumbTint="@color/white"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat"/>
+
+
+
+
+
+
 
 
             </LinearLayout>
@@ -248,6 +226,20 @@
                 android:fontFamily="@font/montserrat"
                 android:layout_margin="@dimen/_15sdp"
                 android:id="@+id/saveBtn"/>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Delete Profıle Voıce"
+                android:visibility="gone"
+                android:textColor="@color/black"
+                android:backgroundTint="#EF6262"
+                android:fontFamily="@font/montserrat"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:id="@+id/deleteVoiceBtn"/>
+
 
         </LinearLayout>
 

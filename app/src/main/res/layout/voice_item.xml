@@ -19,17 +19,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
+            android:maxLines="1"
             android:textColor="?android:textColorPrimary"
             android:id="@+id/voiceTitle"
             android:textStyle="bold"
             android:fontFamily="@font/montserrat"
-            android:textSize="15sp"/>
+            android:textSize="14sp"/>
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="username"
             android:layout_below="@id/voiceTitle"
             android:textStyle="bold"
             android:background="?selectableItemBackground"

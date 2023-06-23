@@ -24,6 +24,7 @@
             android:fontFamily="@font/montserrat"
             android:padding="@dimen/_8sdp"
             android:textSize="14sp"
+            android:backgroundTint="?android:textColorPrimary"
             android:textColorHint="?android:textColorPrimary"
             android:textColor="?android:textColorPrimary"
             />

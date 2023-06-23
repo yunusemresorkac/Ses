@@ -10,10 +10,18 @@
       "client_info": {
         "mobilesdk_app_id": "1:1011120478513:android:91e5584fced72c328ef810",
         "android_client_info": {
-          "package_name": "com.yeslabapps.ses"
+          "package_name": "com.yeslabapps.sesly"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1011120478513-c57utrcg9vsgqk1r4nclb5jgrugqgq8e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yeslabapps.sesly",
+            "certificate_hash": "8451041fe811890aec6924d5b5e87fe9a5aab0c6"
+          }
+        },
         {
           "client_id": "1011120478513-259ojoira1aa742fsumnoh9efm5nt83k.apps.googleusercontent.com",
           "client_type": 3

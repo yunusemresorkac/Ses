@@ -23,22 +23,10 @@
             android:background="@drawable/main_bg"
             android:id="@+id/toolbar">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat"
-                    android:text=""
-                    android:id="@+id/fullName"
-
-                    android:layout_marginStart="@dimen/_3sdp"
-                    android:layout_marginTop="@dimen/_4sdp"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
+                >
 
                 <TextView
                     android:id="@+id/username"
@@ -47,10 +35,21 @@
                     android:layout_marginStart="@dimen/_3sdp"
                     android:fontFamily="@font/montserrat"
                     android:text=""
+                    android:layout_centerVertical="true"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
-            </LinearLayout>
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/tick_svgrepo_com"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:layout_centerVertical="true"
+
+                    android:layout_toEndOf="@id/username"
+                    android:id="@+id/verifiedTick"/>
+
+            </RelativeLayout>
 
 
 
@@ -79,6 +78,8 @@
                 android:id="@+id/pauseProfileVoiceBtn"
                 app:tint="@color/white" />
 
+
+
             <ImageView
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
@@ -88,6 +89,14 @@
                 android:layout_marginEnd="@dimen/_5sdp"
                 app:tint="@color/white" />
 
+            <ImageView
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@drawable/ic_more_vert"
+                android:id="@+id/userActionsBtn"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/_5sdp"
+                app:tint="@color/white" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -145,7 +154,7 @@
                             android:gravity="center"
                             android:layout_margin="@dimen/_2sdp"
                             android:text=""
-                            android:textColor="@color/white"
+                            android:textColor="?android:textColorPrimary"
                             android:fontFamily="@font/montserrat"/>
 
                     </LinearLayout>
@@ -181,7 +190,7 @@
                             android:gravity="center"
                             android:layout_margin="@dimen/_2sdp"
                             android:text=""
-                            android:textColor="@color/white"
+                            android:textColor="?android:textColorPrimary"
                             android:fontFamily="@font/montserrat"/>
 
                     </LinearLayout>
@@ -218,7 +227,7 @@
                             android:layout_marginBottom="@dimen/_2sdp"
                             android:fontFamily="@font/montserrat"
                             android:text=""
-                            android:textColor="@color/white"
+                            android:textColor="?android:textColorPrimary"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -232,19 +241,58 @@
 
             </LinearLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_below="@id/followLay2"
+                android:id="@+id/countryAndDateLay"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+
+                    android:visibility="gone"
+                    android:id="@+id/country"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/montserrat"/>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone"
+
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/joinDate"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/montserrat"/>
+
+
+            </RelativeLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_below="@id/countryAndDateLay"
+                android:background="@color/itemOrange"/>
+
+
 
             <TextView
                 android:id="@+id/bioText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/followLay2"
-                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_below="@id/countryAndDateLay"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginEnd="@dimen/_5sdp"
                 android:layout_marginBottom="@dimen/_5sdp"
                 android:fontFamily="@font/montserrat"
                 android:text=""
-                android:textColor="@color/white" />
+                android:textColor="?android:textColorPrimary"
+                />
 
 
 
@@ -274,7 +322,7 @@
             android:gravity="center"
             android:visibility="gone"
             android:text="@string/bu_hesap_gizlidir_payla_mlar_g_rmek_i_in_takip_edin"
-            android:textColor="@color/white"
+            android:textColor="?android:textColorPrimary"
             android:textSize="15sp"
             android:textStyle="bold" />
 
